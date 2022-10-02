@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using NNPTPZ1;
+using Mathematics;
 
 namespace NNPTPZ1.Mathematics.Tests
 {
@@ -16,22 +17,22 @@ namespace NNPTPZ1.Mathematics.Tests
         [TestMethod()]
         public void AddTest()
         {
-            Cplx a = new Cplx()
+            ComplexNumber a = new ComplexNumber()
             {
-                Re = 10,
-                Imaginari = 20
+                RealPart = 10,
+                ImaginaryPart = 20
             };
-            Cplx b = new Cplx()
+            ComplexNumber b = new ComplexNumber()
             {
-                Re = 1,
-                Imaginari = 2
+                RealPart = 1,
+                ImaginaryPart = 2
             };
 
-            Cplx actual = a.Add(b);
-            Cplx shouldBe = new Cplx()
+            ComplexNumber actual = a.Sum(b);
+            ComplexNumber shouldBe = new ComplexNumber()
             {
-                Re = 11,
-                Imaginari = 22
+                RealPart = 11,
+                ImaginaryPart = 22
             };
 
             Assert.AreEqual(shouldBe, actual);
@@ -43,14 +44,14 @@ namespace NNPTPZ1.Mathematics.Tests
             r2 = b.ToString();
             Assert.AreEqual(e2, r2);
 
-            a = new Cplx()
+            a = new ComplexNumber()
             {
-                Re = 1,
-                Imaginari = -1
+                RealPart = 1,
+                ImaginaryPart = -1
             };
-            b = new Cplx() { Re = 0, Imaginari = 0 };
-            shouldBe = new Cplx() { Re = 1, Imaginari = -1 };
-            actual = a.Add(b);
+            b = new ComplexNumber() { RealPart = 0, ImaginaryPart = 0 };
+            shouldBe = new ComplexNumber() { RealPart = 1, ImaginaryPart = -1 };
+            actual = a.Sum(b);
             Assert.AreEqual(shouldBe, actual);
 
             e2 = "(1 + -1i)";
@@ -65,23 +66,66 @@ namespace NNPTPZ1.Mathematics.Tests
         [TestMethod()]
         public void AddTestPolynome()
         {
-            Poly poly = new Mathematics.Poly();
-            poly.Coe.Add(new Cplx() { Re = 1, Imaginari = 0 });
-            poly.Coe.Add(new Cplx() { Re = 0, Imaginari = 0 });
-            poly.Coe.Add(new Cplx() { Re = 1, Imaginari = 0 });
-            Cplx result = poly.Eval(new Cplx() { Re = 0, Imaginari = 0 });
-            var expected = new Cplx() { Re = 1, Imaginari = 0 };
+            Polynom poly = new Polynom();
+            poly.Coefficients.Add(new ComplexNumber() { RealPart = 1, ImaginaryPart = 0 });
+            poly.Coefficients.Add(new ComplexNumber() { RealPart = 0, ImaginaryPart = 0 });
+            poly.Coefficients.Add(new ComplexNumber() { RealPart = 1, ImaginaryPart = 0 });
+            ComplexNumber result = poly.Evaluate(new ComplexNumber() { RealPart = 0, ImaginaryPart = 0 });
+            var expected = new ComplexNumber() { RealPart = 1, ImaginaryPart = 0 };
             Assert.AreEqual(expected, result);
-            result = poly.Eval(new Cplx() { Re = 1, Imaginari = 0 });
-            expected = new Cplx() { Re = 2, Imaginari = 0 };
+            result = poly.Evaluate(new ComplexNumber() { RealPart = 1, ImaginaryPart = 0 });
+            expected = new ComplexNumber() { RealPart = 2, ImaginaryPart = 0 };
             Assert.AreEqual(expected, result);
-            result = poly.Eval(new Cplx() { Re = 2, Imaginari = 0 });
-            expected = new Cplx() { Re = 5.0000000000, Imaginari = 0 };
+            result = poly.Evaluate(new ComplexNumber() { RealPart = 2, ImaginaryPart = 0 });
+            expected = new ComplexNumber() { RealPart = 5.0000000000, ImaginaryPart = 0 };
             Assert.AreEqual(expected, result);
 
             var r2 = poly.ToString();
             var e2 = "(1 + 0i) + (0 + 0i)x + (1 + 0i)xx";
             Assert.AreEqual(e2, r2);
+        }
+        [TestMethod()]
+        public void TestComplexNumbersAreEqual()
+        {
+            ComplexNumber cx = new ComplexNumber();
+            cx.ImaginaryPart = 1;
+            cx.RealPart = 2;
+            ComplexNumber cy = new ComplexNumber();
+            cy.ImaginaryPart = 1;
+            cy.RealPart = 2;
+            Assert.AreEqual(cx, cy);
+        }
+        [TestMethod()]
+        public void TestComplexNumberDivide()
+        {
+            ComplexNumber cx = new ComplexNumber();
+            cx.ImaginaryPart = 7;
+            cx.RealPart = 3;
+            ComplexNumber cy = new ComplexNumber();
+            cy.ImaginaryPart = 2;
+            cy.RealPart = 6;
+            ComplexNumber expectedResult = new ComplexNumber();
+            expectedResult.ImaginaryPart = (float)(9.0 / 10);
+            expectedResult.RealPart = 4.0 / 5;
+            Assert.AreEqual(cx.Divide(cy), expectedResult);
+        }
+        [TestMethod()]
+        public void TestPolynomDerivative()
+        {
+            ComplexNumber cx = new ComplexNumber();
+            cx.ImaginaryPart = 0;
+            cx.RealPart = 2;
+            ComplexNumber cy = new ComplexNumber();
+            cy.ImaginaryPart = 0;
+            cy.RealPart = 6;
+            ComplexNumber cz = new ComplexNumber();
+            cz.ImaginaryPart = 0;
+            cz.RealPart = 9;
+            List<ComplexNumber> coefficients = new List<ComplexNumber> { cz, cy, cx };
+            Polynom polynom = new Polynom(coefficients);
+            Polynom derivative = polynom.Derive();
+            Assert.AreEqual(new ComplexNumber { RealPart = 6, ImaginaryPart = 0 }, derivative.Coefficients[0]);
+            Assert.AreEqual(new ComplexNumber { RealPart = 4, ImaginaryPart = 0 }, derivative.Coefficients[1]);
         }
     }
 }
