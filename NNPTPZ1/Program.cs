@@ -337,13 +337,12 @@ namespace NNPTPZ1
                 ImaginaryPart = 0
             };
 
-            public ComplexNumber Multiply(ComplexNumber b)
+            public ComplexNumber Multiply(ComplexNumber multiplier)
             {
-                ComplexNumber a = this;
                 return new ComplexNumber()
                 {
-                    RealPart = a.RealPart * b.RealPart - a.ImaginaryPart * b.ImaginaryPart,
-                    ImaginaryPart = (a.RealPart * b.ImaginaryPart + a.ImaginaryPart * b.RealPart)
+                    RealPart = this.RealPart * multiplier.RealPart - this.ImaginaryPart * multiplier.ImaginaryPart,
+                    ImaginaryPart = (this.RealPart * multiplier.ImaginaryPart + this.ImaginaryPart * multiplier.RealPart)
                 };
             }
             public double GetAbS()
@@ -351,26 +350,24 @@ namespace NNPTPZ1
                 return Math.Sqrt( RealPart * RealPart + ImaginaryPart * ImaginaryPart);
             }
 
-            public ComplexNumber Add(ComplexNumber b)
+            public ComplexNumber Add(ComplexNumber addend)
             {
-                ComplexNumber a = this;
                 return new ComplexNumber()
                 {
-                    RealPart = a.RealPart + b.RealPart,
-                    ImaginaryPart = a.ImaginaryPart + b.ImaginaryPart
+                    RealPart = this.RealPart + addend.RealPart,
+                    ImaginaryPart = this.ImaginaryPart + addend.ImaginaryPart
                 };
             }
             public double GetAngleInDegrees()
             {
                 return Math.Atan(ImaginaryPart / RealPart);
             }
-            public ComplexNumber Subtract(ComplexNumber b)
+            public ComplexNumber Subtract(ComplexNumber subtrahend)
             {
-                ComplexNumber a = this;
                 return new ComplexNumber()
                 {
-                    RealPart = a.RealPart - b.RealPart,
-                    ImaginaryPart = a.ImaginaryPart - b.ImaginaryPart
+                    RealPart = this.RealPart - subtrahend.RealPart,
+                    ImaginaryPart = this.ImaginaryPart - subtrahend.ImaginaryPart
                 };
             }
 
