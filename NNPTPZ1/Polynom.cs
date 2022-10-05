@@ -21,9 +21,9 @@ namespace Mathematics
         public void Add(ComplexNumber newCoefficient){ Coefficients.Add(newCoefficient); }
 
         /// <summary>
-        /// Derives this polynomial and creates new one
+        /// Derives this polynomial and creates a new one
         /// </summary>
-        /// <returns>Derivated polynomial</returns>
+        /// <returns>Derived polynomial</returns>
         public Polynom Derive()
         {
             Polynom polynomAfterDerivation = new Polynom();
@@ -39,7 +39,8 @@ namespace Mathematics
         /// <summary>
         /// Evaluates polynomial at given point
         /// </summary>
-        /// <param name="pointOfEvaluation">point of evaluation</param>
+        /// <param name="pointOfEvaluation"></param>
+        /// <returns></returns>
         public ComplexNumber Evaluate(double pointOfEvaluation)
         {
             var y = Evaluate(new ComplexNumber() { RealPart = pointOfEvaluation, ImaginaryPart = 0 });
@@ -49,6 +50,8 @@ namespace Mathematics
         /// <summary>
         /// Evaluates polynomial at given point
         /// </summary>
+        /// <param name="pointOfEvaluationInComplexForm"></param>
+        /// <returns></returns>
         public ComplexNumber Evaluate(ComplexNumber pointOfEvaluationInComplexForm)
         {
             ComplexNumber evaluatedPolynom = ComplexNumber.Zero;
@@ -71,11 +74,6 @@ namespace Mathematics
 
             return evaluatedPolynom;
         }
-
-        /// <summary>
-        /// ToString
-        /// </summary>
-        /// <returns>String representation of polynomial</returns>
         public override string ToString()
         {
             string s = "";

@@ -18,7 +18,7 @@ namespace Mathematics
                 ComplexNumber x = obj as ComplexNumber;
                 return x.RealPart == RealPart && x.ImaginaryPart == ImaginaryPart;
             }
-            return base.Equals(obj);
+            return false;
         }
 
         public readonly static ComplexNumber Zero = new ComplexNumber()
@@ -27,10 +27,14 @@ namespace Mathematics
             ImaginaryPart = 0
         };
 
+        /// <summary>
+        /// Multiplies current ComplexNumber with the one provided in the parameter and creates a new one 
+        /// using the following formula: (aRe * bRe - aIm * bIm) + i(aRe * bIm + aIm * bRe)
+        /// </summary>
+        /// <param name="b"></param>
+        /// <returns></returns>
         public ComplexNumber Multiply(ComplexNumber b)
         {
-            // (aRe * bRe - aIm * bIm) + i(aRe * bIm + aIm * bRe)
-
             ComplexNumber a = this;
             return new ComplexNumber()
             {
@@ -43,6 +47,11 @@ namespace Mathematics
             return Math.Sqrt(RealPart * RealPart + ImaginaryPart * ImaginaryPart);
         }
 
+        /// <summary>
+        /// Sums up current ComplexNumber with the one provided in the parameter and creates a new one
+        /// </summary>
+        /// <param name="b"></param>
+        /// <returns></returns>
         public ComplexNumber Sum(ComplexNumber b)
         {
             ComplexNumber a = this;
@@ -56,6 +65,12 @@ namespace Mathematics
         {
             return Math.Atan(ImaginaryPart / RealPart);
         }
+
+        /// <summary>
+        /// Subtracts current ComplexNumber with the one provided in the parameter and creates a new one
+        /// </summary>
+        /// <param name="b"></param>
+        /// <returns></returns>
         public ComplexNumber Subtract(ComplexNumber b)
         {
             ComplexNumber a = this;
@@ -66,16 +81,14 @@ namespace Mathematics
             };
         }
 
-        public override string ToString()
-        {
-            return $"({RealPart} + {ImaginaryPart}i)";
-        }
-
+        /// <summary>
+        /// Divides current ComplexNumber with the one provided in the parameter and creates a new one
+        /// using the following formula: ((aRe * bRe + aIm * bIm) + i(aIm * bRe - aRe * bIm)) / (bRe^2 + bIm^2)  
+        /// </summary>
+        /// <param name="b"></param>
+        /// <returns>newly created ComplexNumber </returns>
         public ComplexNumber Divide(ComplexNumber b)
         {
-            // (aRe + aIm*i) / (bRe + bIm*i)
-            //  ((aRe * bRe + aIm * bIm) + i(aIm * bRe - aRe * bIm)) / (bRe^2 + bIm^2) 
-            
             ComplexNumber a = this;
             double realPartNumerator = a.RealPart * b.RealPart + a.ImaginaryPart * b.ImaginaryPart;
             double denominator = Math.Pow(b.RealPart, 2) + Math.Pow(b.ImaginaryPart, 2);
@@ -86,8 +99,21 @@ namespace Mathematics
             return new ComplexNumber()
             {
                 RealPart = realPart,
-                ImaginaryPart = (float) imaginaryPart
+                ImaginaryPart = (float)imaginaryPart
             };
+        }
+
+        public override string ToString()
+        {
+            return $"({RealPart} + {ImaginaryPart}i)";
+        }
+
+        public override int GetHashCode()
+        {
+            int hashCode = 1382181547;
+            hashCode = hashCode * -1521134295 + RealPart.GetHashCode();
+            hashCode = hashCode * -1521134295 + ImaginaryPart.GetHashCode();
+            return hashCode;
         }
     }
 }
