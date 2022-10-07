@@ -28,7 +28,7 @@ namespace NNPTPZ1.Mathematics
         {
             ComplexNumber left = this;
             // aRe*bRe + aRe*bIm*i + aIm*bRe*i + aIm*bIm*i*i
-            return new ComplexNumber()
+            return new ComplexNumber
             {
                 Real = left.Real * right.Real - left.Imaginary * right.Imaginary,
                 Imaginary = left.Real * right.Imaginary + left.Imaginary * right.Real
@@ -58,7 +58,7 @@ namespace NNPTPZ1.Mathematics
         public ComplexNumber Subtract(ComplexNumber right)
         {
             ComplexNumber left = this;
-            return new ComplexNumber()
+            return new ComplexNumber
             {
                 Real = left.Real - right.Real,
                 Imaginary = left.Imaginary - right.Imaginary
@@ -70,15 +70,15 @@ namespace NNPTPZ1.Mathematics
             return $"({Real} + {Imaginary}i)";
         }
 
-        internal ComplexNumber Divide(ComplexNumber right)
+        public ComplexNumber Divide(ComplexNumber right)
         {
             // (aRe + aIm*i) / (bRe + bIm*i)
             // ((aRe + aIm*i) * (bRe - bIm*i)) / ((bRe + bIm*i) * (bRe - bIm*i))
             //  bRe*bRe - bIm*bIm*i*i
-            var dividend = Multiply(new ComplexNumber() { Real = right.Real, Imaginary = -right.Imaginary });
+            var dividend = Multiply(new ComplexNumber { Real = right.Real, Imaginary = -right.Imaginary });
             var divisor = right.Real * right.Real + right.Imaginary * right.Imaginary;
 
-            return new ComplexNumber()
+            return new ComplexNumber
             {
                 Real = dividend.Real / divisor,
                 Imaginary = dividend.Imaginary / divisor

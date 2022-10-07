@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace NNPTPZ1.Mathematics
 {
@@ -69,6 +70,24 @@ namespace NNPTPZ1.Mathematics
             }
 
             return s;
+        }
+
+        protected bool Equals(Polynome other)
+        {
+            return Coefficients.SequenceEqual(other.Coefficients);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((Polynome)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return (Coefficients != null ? Coefficients.GetHashCode() : 0);
         }
 
         /// <summary>
