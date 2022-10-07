@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="Mathematics\ComplexNumber.cs" />
     <Compile Include="Mathematics\Polynome.cs" />
+    <Compile Include="NewtonFractalGenerator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
