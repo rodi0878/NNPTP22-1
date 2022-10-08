@@ -1,331 +1,272 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO;
 using System.Drawing;
-using System.Drawing.Design;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
-using System.Drawing.Printing;
-using System.Drawing.Text;
-using System.Drawing.Drawing2D;
-using System.Linq.Expressions;
-using System.Threading;
 using NNPTPZ1.Mathematics;
 
 namespace NNPTPZ1
 {
-    /// <summary>
-    /// This program should produce Newton fractals.
     /// See more at: https://en.wikipedia.org/wiki/Newton_fractal
-    /// </summary>
-    class Program
+    class NewtonFractalProducer
     {
         static void Main(string[] args)
         {
-            int[] intargs = new int[2];
-            for (int i = 0; i < intargs.Length; i++)
+            int pointerForArguments = 0;
+            int widthOfBitmap = 512, heightOfBitmap = 512;
+            if (args.Length >= 2)
             {
-                intargs[i] = int.Parse(args[i]);
+                try
+                {
+                    widthOfBitmap = int.Parse(args[pointerForArguments++]);
+                    heightOfBitmap = int.Parse(args[pointerForArguments++]);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    pointerForArguments = 0;
+                }
             }
-            double[] doubleargs = new double[4];
-            for (int i = 0; i < doubleargs.Length; i++)
+
+            double xmin = 0, xmax = 0, ymin = 0, ymax = 0;
+
+            if (args.Length >= 6)
             {
-                doubleargs[i] = double.Parse(args[i + 2]);
+                try
+                {
+                    xmin = double.Parse(args[pointerForArguments++]);
+                    xmax = double.Parse(args[pointerForArguments++]);
+                    ymin = double.Parse(args[pointerForArguments++]);
+                    ymax = double.Parse(args[pointerForArguments++]);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
             }
-            string output = args[6];
-            // TODO: add parameters from args?
-            Bitmap bmp = new Bitmap(intargs[0], intargs[1]);
-            double xmin = doubleargs[0];
-            double xmax = doubleargs[1];
-            double ymin = doubleargs[2];
-            double ymax = doubleargs[3];
+            string output = null;
+            if (args.Length == 7)
+            {
+                output = args[pointerForArguments];
+            }
 
-            double xstep = (xmax - xmin) / intargs[0];
-            double ystep = (ymax - ymin) / intargs[1];
+            Bitmap bitmapToPaint = new Bitmap(widthOfBitmap, heightOfBitmap);
 
-            List<Cplx> koreny = new List<Cplx>();
-            // TODO: poly should be parameterised?
-            Poly p = new Poly();
-            p.Coe.Add(new Cplx() { Re = 1 });
-            p.Coe.Add(Cplx.Zero);
-            p.Coe.Add(Cplx.Zero);
-            //p.Coe.Add(Cplx.Zero);
-            p.Coe.Add(new Cplx() { Re = 1 });
-            Poly ptmp = p;
-            Poly pd = p.Derive();
+            double xstep = (xmax - xmin) / widthOfBitmap;
+            double ystep = (ymax - ymin) / heightOfBitmap;
 
-            Console.WriteLine(p);
-            Console.WriteLine(pd);
+            List<ComplexNumber> roots = new List<ComplexNumber>();
 
-            var clrs = new Color[]
+            Polynomial polynomials = new Polynomial();
+            polynomials.Coefficients.Add(new ComplexNumber() { RealNumber = 1 });
+            polynomials.Coefficients.Add(ComplexNumber.Zero);
+            polynomials.Coefficients.Add(ComplexNumber.Zero);
+            polynomials.Coefficients.Add(new ComplexNumber() { RealNumber = 1 });
+            Polynomial derivedPolynomials = polynomials.Derive();
+
+            Console.WriteLine(polynomials);
+            Console.WriteLine(derivedPolynomials);
+
+            var colors = new Color[]
             {
                 Color.Red, Color.Blue, Color.Green, Color.Yellow, Color.Orange, Color.Fuchsia, Color.Gold, Color.Cyan, Color.Magenta
             };
-
-            var maxid = 0;
-
-            // TODO: cleanup!!!
-            // for every pixel in image...
-            for (int i = 0; i < intargs[0]; i++)
+            for (int i = 0; i < widthOfBitmap; i++)
             {
-                for (int j = 0; j < intargs[1]; j++)
+                for (int j = 0; j < heightOfBitmap; j++)
                 {
-                    // find "world" coordinates of pixel
-                    double y = ymin + i * ystep;
                     double x = xmin + j * xstep;
+                    double y = ymin + i * ystep;
 
-                    Cplx ox = new Cplx()
+                    ComplexNumber Point = new ComplexNumber()
                     {
-                        Re = x,
-                        Imaginari = (float)(y)
+                        RealNumber = x,
+                        ImaginaryUnit = (float)(y)
                     };
 
-                    if (ox.Re == 0)
-                        ox.Re = 0.0001;
-                    if (ox.Imaginari == 0)
-                        ox.Imaginari = 0.0001f;
+                    if (Point.RealNumber == 0)
+                        Point.RealNumber = 0.0001;
+                    if (Point.ImaginaryUnit == 0)
+                        Point.ImaginaryUnit = 0.0001f;
 
-                    //Console.WriteLine(ox);
-
-                    // find solution of equation using newton's iteration
-                    float it = 0;
-                    for (int q = 0; q< 30; q++)
+                    float iteration = 0;
+                    for (int k = 0; k < 30; k++)
                     {
-                        var diff = p.Eval(ox).Divide(pd.Eval(ox));
-                        ox = ox.Subtract(diff);
+                        var difference = polynomials.Evaluate(Point).Divide(derivedPolynomials.Evaluate(Point));
+                        Point = Point.Subtract(difference);
 
-                        //Console.WriteLine($"{q} {ox} -({diff})");
-                        if (Math.Pow(diff.Re, 2) + Math.Pow(diff.Imaginari, 2) >= 0.5)
+                        if (Math.Pow(difference.RealNumber, 2) + Math.Pow(difference.ImaginaryUnit, 2) >= 0.5)
                         {
-                            q--;
+                            k--;
                         }
-                        it++;
+                        iteration++;
                     }
 
-                    //Console.ReadKey();
-
-                    // find solution root number
                     var known = false;
                     var id = 0;
-                    for (int w = 0; w <koreny.Count;w++)
+                    for (int k = 0; k < roots.Count; k++)
                     {
-                        if (Math.Pow(ox.Re- koreny[w].Re, 2) + Math.Pow(ox.Imaginari - koreny[w].Imaginari, 2) <= 0.01)
+                        if (Math.Pow(Point.RealNumber - roots[k].RealNumber, 2) + Math.Pow(Point.ImaginaryUnit - roots[k].ImaginaryUnit, 2) <= 0.01)
                         {
                             known = true;
-                            id = w;
+                            id = k;
                         }
                     }
                     if (!known)
                     {
-                        koreny.Add(ox);
-                        id = koreny.Count;
-                        maxid = id + 1; 
+                        roots.Add(Point);
+                        id = roots.Count;
                     }
 
-                    // colorize pixel according to root number
-                    //int vv = id;
-                    //int vv = id * 50 + (int)it*5;
-                    var vv = clrs[id % clrs.Length];
-                    vv = Color.FromArgb(vv.R, vv.G, vv.B);
-                    vv = Color.FromArgb(Math.Min(Math.Max(0, vv.R-(int)it*2), 255), Math.Min(Math.Max(0, vv.G - (int)it*2), 255), Math.Min(Math.Max(0, vv.B - (int)it*2), 255));
-                    //vv = Math.Min(Math.Max(0, vv), 255);
-                    bmp.SetPixel(j, i, vv);
-                    //bmp.SetPixel(j, i, Color.FromArgb(vv, vv, vv));
+                    var pixelColor = colors[id % colors.Length];
+                    pixelColor = Color.FromArgb(
+                        Math.Min(Math.Max(0, pixelColor.R - (int)iteration * 2), 255),
+                        Math.Min(Math.Max(0, pixelColor.G - (int)iteration * 2), 255),
+                        Math.Min(Math.Max(0, pixelColor.B - (int)iteration * 2), 255)
+                    );
+                    bitmapToPaint.SetPixel(j, i, pixelColor);
                 }
             }
-
-            // TODO: delete I suppose...
-            //for (int i = 0; i < 300; i++)
-            //{
-            //    for (int j = 0; j < 300; j++)
-            //    {
-            //        Color c = bmp.GetPixel(j, i);
-            //        int nv = (int)Math.Floor(c.R * (255.0 / maxid));
-            //        bmp.SetPixel(j, i, Color.FromArgb(nv, nv, nv));
-            //    }
-            //}
-
-                    bmp.Save(output ?? "../../../out.png");
-            //Console.ReadKey();
+            bitmapToPaint.Save(output ?? "../../../out.png");
         }
     }
 
     namespace Mathematics
     {
-        public class Poly
+        public class Polynomial
         {
-            /// <summary>
-            /// Coe
-            /// </summary>
-            public List<Cplx> Coe { get; set; }
 
-            /// <summary>
-            /// Constructor
-            /// </summary>
-            public Poly() => Coe = new List<Cplx>();
+            public List<ComplexNumber> Coefficients { get; set; }
 
-            public void Add(Cplx coe) =>
-                Coe.Add(coe);
+            public Polynomial() => Coefficients = new List<ComplexNumber>();
 
-            /// <summary>
-            /// Derives this polynomial and creates new one
-            /// </summary>
-            /// <returns>Derivated polynomial</returns>
-            public Poly Derive()
+            public void Add(ComplexNumber coefficient) =>
+                Coefficients.Add(coefficient);
+
+            public Polynomial Derive()
             {
-                Poly p = new Poly();
-                for (int q = 1; q < Coe.Count; q++)
+                Polynomial polynomial = new Polynomial();
+                for (int i = 1; i < Coefficients.Count; i++)
                 {
-                    p.Coe.Add(Coe[q].Multiply(new Cplx() { Re = q }));
+                    polynomial.Coefficients.Add(Coefficients[i].Multiply(new ComplexNumber() { RealNumber = i }));
                 }
-
-                return p;
+                return polynomial;
             }
 
-            /// <summary>
-            /// Evaluates polynomial at given point
-            /// </summary>
-            /// <param name="x">point of evaluation</param>
-            /// <returns>y</returns>
-            public Cplx Eval(double x)
+            public ComplexNumber Evaluate(double pointOfEvaluation)
             {
-                var y = Eval(new Cplx() { Re = x, Imaginari = 0 });
-                return y;
+                return Evaluate(new ComplexNumber() { RealNumber = pointOfEvaluation, ImaginaryUnit = 0 });
             }
-
-            /// <summary>
-            /// Evaluates polynomial at given point
-            /// </summary>
-            /// <param name="x">point of evaluation</param>
-            /// <returns>y</returns>
-            public Cplx Eval(Cplx x)
+            
+            public ComplexNumber Evaluate(ComplexNumber pointOfEvaluation)
             {
-                Cplx s = Cplx.Zero;
-                for (int i = 0; i < Coe.Count; i++)
+                ComplexNumber result = ComplexNumber.Zero;
+                for (int i = 0; i < Coefficients.Count; i++)
                 {
-                    Cplx coef = Coe[i];
-                    Cplx bx = x;
+                    ComplexNumber coefficient = Coefficients[i];
+                    ComplexNumber evalComplexNumber = pointOfEvaluation;
                     int power = i;
 
                     if (i > 0)
                     {
                         for (int j = 0; j < power - 1; j++)
-                            bx = bx.Multiply(x);
+                            evalComplexNumber = evalComplexNumber.Multiply(pointOfEvaluation);
 
-                        coef = coef.Multiply(bx);
+                        coefficient = coefficient.Multiply(pointOfEvaluation);
                     }
 
-                    s = s.Add(coef);
+                    result = result.Add(coefficient);
                 }
 
-                return s;
+                return result;
             }
 
-            /// <summary>
-            /// ToString
-            /// </summary>
-            /// <returns>String repr of polynomial</returns>
             public override string ToString()
             {
-                string s = "";
-                int i = 0;
-                for (; i < Coe.Count; i++)
+                string stringBuilder = "";
+                for (int i = 0; i < Coefficients.Count; i++)
                 {
-                    s += Coe[i];
+                    stringBuilder += Coefficients[i];
                     if (i > 0)
                     {
-                        int j = 0;
-                        for (; j < i; j++)
+                        for (int j = 0; j < i; j++)
                         {
-                            s += "x";
+                            stringBuilder += "x";
                         }
                     }
-                    if (i+1<Coe.Count)
-                    s += " + ";
+                    if (i + 1 < Coefficients.Count)
+                    {
+                        stringBuilder += " + ";
+                    }
                 }
-                return s;
+                return stringBuilder;
             }
         }
 
-        public class Cplx
+        public class ComplexNumber
         {
-            public double Re { get; set; }
-            public float Imaginari { get; set; }
+            public double RealNumber { get; set; }
+            public float ImaginaryUnit { get; set; }
 
-            public override bool Equals(object obj)
+            public override bool Equals(object objectToCompare)
             {
-                if (obj is Cplx)
+                if (objectToCompare is ComplexNumber)
                 {
-                    Cplx x = obj as Cplx;
-                    return x.Re == Re && x.Imaginari == Imaginari;
+                    ComplexNumber complexNumberToCompare = objectToCompare as ComplexNumber;
+                    return complexNumberToCompare.RealNumber == RealNumber && complexNumberToCompare.ImaginaryUnit == ImaginaryUnit;
                 }
-                return base.Equals(obj);
+                return base.Equals(objectToCompare);
             }
 
-            public readonly static Cplx Zero = new Cplx()
+            public readonly static ComplexNumber Zero = new ComplexNumber()
             {
-                Re = 0,
-                Imaginari = 0
+                RealNumber = 0,
+                ImaginaryUnit = 0
             };
 
-            public Cplx Multiply(Cplx b)
+            public ComplexNumber Multiply(ComplexNumber multiplicand)
             {
-                Cplx a = this;
-                // aRe*bRe + aRe*bIm*i + aIm*bRe*i + aIm*bIm*i*i
-                return new Cplx()
+                ComplexNumber multiplier = this;
+                return new ComplexNumber()
                 {
-                    Re = a.Re * b.Re - a.Imaginari * b.Imaginari,
-                    Imaginari = (float)(a.Re * b.Imaginari + a.Imaginari * b.Re)
+                    RealNumber = multiplier.RealNumber * multiplicand.RealNumber - multiplier.ImaginaryUnit * multiplicand.ImaginaryUnit,
+                    ImaginaryUnit = (float)(multiplier.RealNumber * multiplicand.ImaginaryUnit + multiplier.ImaginaryUnit * multiplicand.RealNumber)
                 };
-            }
-            public double GetAbS()
-            {
-                return Math.Sqrt( Re * Re + Imaginari * Imaginari);
             }
 
-            public Cplx Add(Cplx b)
+            public ComplexNumber Add(ComplexNumber termToAdd)
             {
-                Cplx a = this;
-                return new Cplx()
+                ComplexNumber term = this;
+                return new ComplexNumber()
                 {
-                    Re = a.Re + b.Re,
-                    Imaginari = a.Imaginari + b.Imaginari
+                    RealNumber = term.RealNumber + termToAdd.RealNumber,
+                    ImaginaryUnit = term.ImaginaryUnit + termToAdd.ImaginaryUnit
                 };
             }
-            public double GetAngleInDegrees()
+
+
+            public ComplexNumber Subtract(ComplexNumber subtrahend)
             {
-                return Math.Atan(Imaginari / Re);
-            }
-            public Cplx Subtract(Cplx b)
-            {
-                Cplx a = this;
-                return new Cplx()
+                ComplexNumber minuend = this;
+                return new ComplexNumber()
                 {
-                    Re = a.Re - b.Re,
-                    Imaginari = a.Imaginari - b.Imaginari
+                    RealNumber = minuend.RealNumber - subtrahend.RealNumber,
+                    ImaginaryUnit = minuend.ImaginaryUnit - subtrahend.ImaginaryUnit
                 };
             }
 
             public override string ToString()
             {
-                return $"({Re} + {Imaginari}i)";
+                return $"({RealNumber} + {ImaginaryUnit}i)";
             }
 
-            internal Cplx Divide(Cplx b)
+            internal ComplexNumber Divide(ComplexNumber complexNumberForDivision)
             {
-                // (aRe + aIm*i) / (bRe + bIm*i)
-                // ((aRe + aIm*i) * (bRe - bIm*i)) / ((bRe + bIm*i) * (bRe - bIm*i))
-                //  bRe*bRe - bIm*bIm*i*i
-                var tmp = this.Multiply(new Cplx() { Re = b.Re, Imaginari = -b.Imaginari });
-                var tmp2 = b.Re * b.Re + b.Imaginari * b.Imaginari;
+                var dividend = this.Multiply(new ComplexNumber() { RealNumber = complexNumberForDivision.RealNumber, ImaginaryUnit = -complexNumberForDivision.ImaginaryUnit });
+                var divisor = complexNumberForDivision.RealNumber * complexNumberForDivision.RealNumber + complexNumberForDivision.ImaginaryUnit * complexNumberForDivision.ImaginaryUnit;
 
-                return new Cplx()
+                return new ComplexNumber()
                 {
-                    Re = tmp.Re / tmp2,
-                    Imaginari = (float)(tmp.Imaginari / tmp2)
+                    RealNumber = dividend.RealNumber / divisor,
+                    ImaginaryUnit = (float)(dividend.ImaginaryUnit / divisor)
                 };
             }
         }
