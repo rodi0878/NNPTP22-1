@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace NNPTPZ1.Mathematics
 {
@@ -25,9 +26,9 @@ namespace NNPTPZ1.Mathematics
         public Polynome Derive()
         {
             Polynome derivated = new Polynome();
-            for (int q = 1; q < Coefficients.Count; q++)
+            for (int i = 1; i < Coefficients.Count; i++)
             {
-                derivated.Coefficients.Add(Coefficients[q].Multiply(new ComplexNumber() { Real = q }));
+                derivated.Coefficients.Add(Coefficients[i].Multiply(new ComplexNumber() { Real = i }));
             }
 
             return derivated;
@@ -96,25 +97,23 @@ namespace NNPTPZ1.Mathematics
         /// <returns>String representation of polynomial</returns>
         public override string ToString()
         {
-            string s = "";
-            int i = 0;
-            for (; i < Coefficients.Count; i++)
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i < Coefficients.Count; i++)
             {
-                s += Coefficients[i];
+                builder.Append(Coefficients[i]);
                 if (i > 0)
                 {
-                    int j = 0;
-                    for (; j < i; j++)
+                    for (int j = 0; j < i; j++)
                     {
-                        s += "x";
+                        builder.Append("x");
                     }
                 }
 
                 if (i + 1 < Coefficients.Count)
-                    s += " + ";
+                    builder.Append(" + ");
             }
 
-            return s;
+            return builder.ToString();
         }
     }
 }

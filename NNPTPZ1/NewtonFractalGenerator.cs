@@ -70,7 +70,7 @@ namespace NNPTPZ1
 
                     // find solution of equation using newton's iteration
                     var iterationNumber = NewtonsIteration(ref worldCoordinatesOfPixel);
-                    
+
                     // find solution root number
                     var rootNumber = FindRootNumber(worldCoordinatesOfPixel);
 
@@ -85,14 +85,14 @@ namespace NNPTPZ1
         {
             int iterations = 0;
 
-            for (int q = 0; q < MaxIterations; q++)
+            for (int i = 0; i < MaxIterations; i++)
             {
                 var diff = polynome.Eval(complexNumber).Divide(polynomeDerived.Eval(complexNumber));
                 complexNumber = complexNumber.Subtract(diff);
 
                 if (Math.Pow(diff.Real, 2) + Math.Pow(diff.Imaginary, 2) >= 0.5)
                 {
-                    q--;
+                    i--;
                 }
 
                 iterations++;
@@ -121,8 +121,8 @@ namespace NNPTPZ1
 
         private int FindRootNumber(ComplexNumber ox)
         {
-            var known = false;
-            var rootNumber = 0;
+            bool known = false;
+            int rootNumber = 0;
             for (int w = 0; w < roots.Count; w++)
             {
                 if (Math.Pow(ox.Real - roots[w].Real, 2) + Math.Pow(ox.Imaginary - roots[w].Imaginary, 2) <= Tolerance)
@@ -143,11 +143,11 @@ namespace NNPTPZ1
 
         private void ColorizePixelByRootNumber(int rootNumber, int iteration, int xPosition, int yPosition)
         {
-            var vv = Colors[rootNumber % Colors.Length];
-            vv = Color.FromArgb(vv.R, vv.G, vv.B);
-            vv = Color.FromArgb(Math.Min(Math.Max(0, vv.R - iteration * 2), 255),
-                Math.Min(Math.Max(0, vv.G - iteration * 2), 255), Math.Min(Math.Max(0, vv.B - iteration * 2), 255));
-            bitmap.SetPixel(xPosition, yPosition, vv);
+            var color = Colors[rootNumber % Colors.Length];
+            color = Color.FromArgb(Math.Min(Math.Max(0, color.R - iteration * 2), 255),
+                Math.Min(Math.Max(0, color.G - iteration * 2), 255),
+                Math.Min(Math.Max(0, color.B - iteration * 2), 255));
+            bitmap.SetPixel(xPosition, yPosition, color);
         }
     }
 }
