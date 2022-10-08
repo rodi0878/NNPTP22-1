@@ -28,7 +28,7 @@ namespace NNPTPZ1.Mathematics.Tests
                 ImaginaryPart = 2
             };
 
-            ComplexNumber actual = a.Sum(b);
+            ComplexNumber actual = a.Add(b);
             ComplexNumber shouldBe = new ComplexNumber()
             {
                 RealPart = 11,
@@ -51,7 +51,7 @@ namespace NNPTPZ1.Mathematics.Tests
             };
             b = new ComplexNumber() { RealPart = 0, ImaginaryPart = 0 };
             shouldBe = new ComplexNumber() { RealPart = 1, ImaginaryPart = -1 };
-            actual = a.Sum(b);
+            actual = a.Add(b);
             Assert.AreEqual(shouldBe, actual);
 
             e2 = "(1 + -1i)";

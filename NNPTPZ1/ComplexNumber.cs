@@ -9,7 +9,7 @@ namespace Mathematics
     public class ComplexNumber
     {
         public double RealPart { get; set; }
-        public float ImaginaryPart { get; set; }
+        public double ImaginaryPart { get; set; }
 
         public override bool Equals(object obj)
         {
@@ -52,7 +52,7 @@ namespace Mathematics
         /// </summary>
         /// <param name="b"></param>
         /// <returns></returns>
-        public ComplexNumber Sum(ComplexNumber b)
+        public ComplexNumber Add(ComplexNumber b)
         {
             ComplexNumber a = this;
             return new ComplexNumber()
@@ -61,7 +61,7 @@ namespace Mathematics
                 ImaginaryPart = a.ImaginaryPart + b.ImaginaryPart
             };
         }
-        public double GetAngleInDegrees()
+        public double GetAngleInRadians()
         {
             return Math.Atan(ImaginaryPart / RealPart);
         }

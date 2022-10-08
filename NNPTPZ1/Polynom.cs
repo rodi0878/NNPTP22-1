@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -18,7 +19,7 @@ namespace Mathematics
             Coefficients = coefficients;
         }
 
-        public void Add(ComplexNumber newCoefficient){ Coefficients.Add(newCoefficient); }
+        public void Add(ComplexNumber newCoefficient) { Coefficients.Add(newCoefficient); }
 
         /// <summary>
         /// Derives this polynomial and creates a new one
@@ -59,40 +60,34 @@ namespace Mathematics
             {
                 ComplexNumber coefficient = Coefficients[i];
                 ComplexNumber valueOfX = pointOfEvaluationInComplexForm;
-                int power = i;
 
                 if (i > 0)
                 {
-                    for (int j = 0; j < power - 1; j++)
+                    for (int j = 0; j < i - 1; j++)
                         valueOfX = valueOfX.Multiply(pointOfEvaluationInComplexForm);
 
                     coefficient = coefficient.Multiply(valueOfX);
                 }
 
-                evaluatedPolynom = evaluatedPolynom.Sum(coefficient);
+                evaluatedPolynom = evaluatedPolynom.Add(coefficient);
             }
 
             return evaluatedPolynom;
         }
         public override string ToString()
         {
-            string s = "";
-            int i = 0;
-            for (; i < Coefficients.Count; i++)
+            string stringRepresentation = "";
+            for (int i = 0; i < Coefficients.Count; i++)
             {
-                s += Coefficients[i];
-                if (i > 0)
-                {
-                    int j = 0;
-                    for (; j < i; j++)
+                stringRepresentation += Coefficients[i];
+                    for (int j = 1; j < i; j++)
                     {
-                        s += "x";
+                        stringRepresentation += "x";
                     }
-                }
                 if (i + 1 < Coefficients.Count)
-                    s += " + ";
+                    stringRepresentation += " + ";
             }
-            return s;
+            return stringRepresentation;
         }
     }
 }

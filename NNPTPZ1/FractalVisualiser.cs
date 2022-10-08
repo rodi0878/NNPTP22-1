@@ -81,15 +81,15 @@ namespace Graphics
 
         private void colorizePixel(int x, int y, int numberOfTotalIterations, int actualRootPosition)
         {
-            var vv = colors[actualRootPosition % colors.Length];
-            vv = Color.FromArgb(Math.Min(Math.Max(0, vv.R - numberOfTotalIterations * 2), 255), Math.Min(Math.Max(0, vv.G - numberOfTotalIterations * 2), 255), Math.Min(Math.Max(0, vv.B - numberOfTotalIterations * 2), 255));
-            bitmap.SetPixel(x, y, vv);
+            Color pixelColor = colors[actualRootPosition % colors.Length];
+            pixelColor = Color.FromArgb(Math.Min(Math.Max(0, pixelColor.R - numberOfTotalIterations * 2), 255), Math.Min(Math.Max(0, pixelColor.G - numberOfTotalIterations * 2), 255), Math.Min(Math.Max(0, pixelColor.B - numberOfTotalIterations * 2), 255));
+            bitmap.SetPixel(x, y, pixelColor);
         }
 
         private static int findPositionOfActualRootInArray(List<ComplexNumber> roots, ComplexNumber functionRoot)
         {
-            var actualRootFound = false;
-            var actualRootPosition = -1;
+            bool actualRootFound = false;
+            int actualRootPosition = -1;
             for (int i = 0; i < roots.Count; i++)
             {
                 if (Math.Pow(functionRoot.RealPart - roots[i].RealPart, 2) + Math.Pow(functionRoot.ImaginaryPart - roots[i].ImaginaryPart, 2)
