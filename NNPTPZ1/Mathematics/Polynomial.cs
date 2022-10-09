@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Mathematics
 {
@@ -14,6 +13,11 @@ namespace Mathematics
         /// Constructor
         /// </summary>
         public Polynomial() => ComplexNumberList = new List<ComplexNumber>();
+
+        public Polynomial(List<ComplexNumber> complexNumberList)
+        {
+            ComplexNumberList = complexNumberList;
+        }
 
         /// <summary>
         /// Adds complexNumber to the list
