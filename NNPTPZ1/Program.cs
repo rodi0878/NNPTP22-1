@@ -72,8 +72,8 @@ namespace NNPTPZ1
                         iteration++;
                     }
 
-                    var known = false;
-                    var id = 0;
+                    bool known = false;
+                    int id = 0;
                     for (int k = 0; k < roots.Count; k++)
                     {
                         if (Math.Pow(number.RealPart - roots[k].RealPart, 2) + Math.Pow(number.ImaginaryPart - roots[k].ImaginaryPart, 2) <= 0.01)
