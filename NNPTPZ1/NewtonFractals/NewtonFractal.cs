@@ -49,6 +49,7 @@ namespace NNPTPZ1.NewtonFractals
         }
         public void DrawToBitmap()
         {
+            
             for (int i = 0; i < outputPaint.Width; i++)
             {
                 for (int j = 0; j < outputPaint.Height; j++)
@@ -59,18 +60,20 @@ namespace NNPTPZ1.NewtonFractals
                         ImaginaryPart = config.YMin + i * yStep
                     }));
                 }
+                Console.WriteLine(i+"/" + outputPaint.Width);
             }
         }
 
-        private void AvoidDivisionByZeroWithSlightDifference(ComplexNumber point)
+        private ComplexNumber AvoidDivisionByZeroWithSlightDifference(ComplexNumber point)
         {
             if (point.RealPart == 0)
                 point.RealPart = 0.0001;
             if (point.ImaginaryPart == 0)
-                point.ImaginaryPart = 0.0001f;
+                point.ImaginaryPart = 0.0001;
+            return point;
         }
 
-        private void ApplyNewtonIteration(ComplexNumber point, out int iteratorCounter)
+        private ComplexNumber ApplyNewtonIteration(ref ComplexNumber point, out int iteratorCounter)
         {
             iteratorCounter = 0;
             for (int i = 0; i < NewtonsIterationsAmount; i++)
@@ -83,9 +86,11 @@ namespace NNPTPZ1.NewtonFractals
                 }
                 iteratorCounter++;
             }
+            return point;
+
         }
 
-        private void FindFractalRoots(ComplexNumber point, out int colorIndexHelper)
+        private ComplexNumber FindFractalRoots(ComplexNumber point, out int colorIndexHelper)
         {
             bool known = false;
             colorIndexHelper = 0;
@@ -102,13 +107,15 @@ namespace NNPTPZ1.NewtonFractals
                 Roots.Add(point);
                 colorIndexHelper = Roots.Count;
             }
+            return point;
+
         }
 
         private Color FindColorByNewtonsIteration(ComplexNumber point)
         {
             AvoidDivisionByZeroWithSlightDifference(point);
 
-            ApplyNewtonIteration(point, out int iteratorCounter);
+            ApplyNewtonIteration(ref point, out int iteratorCounter);
 
             FindFractalRoots(point, out int colorIndexHelper);
             
