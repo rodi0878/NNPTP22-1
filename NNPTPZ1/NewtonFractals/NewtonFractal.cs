@@ -64,16 +64,15 @@ namespace NNPTPZ1.NewtonFractals
             }
         }
 
-        private ComplexNumber AvoidDivisionByZeroWithSlightDifference(ComplexNumber point)
+        private void AvoidDivisionByZeroWithSlightDifference(ComplexNumber point)
         {
             if (point.RealPart == 0)
                 point.RealPart = 0.0001;
             if (point.ImaginaryPart == 0)
                 point.ImaginaryPart = 0.0001;
-            return point;
         }
 
-        private ComplexNumber ApplyNewtonIteration(ref ComplexNumber point, out int iteratorCounter)
+        private void ApplyNewtonIteration(ref ComplexNumber point, out int iteratorCounter)
         {
             iteratorCounter = 0;
             for (int i = 0; i < NewtonsIterationsAmount; i++)
@@ -86,11 +85,10 @@ namespace NNPTPZ1.NewtonFractals
                 }
                 iteratorCounter++;
             }
-            return point;
 
         }
 
-        private ComplexNumber FindFractalRoots(ComplexNumber point, out int colorIndexHelper)
+        private void FindFractalRoots(ComplexNumber point, out int colorIndexHelper)
         {
             bool known = false;
             colorIndexHelper = 0;
@@ -107,7 +105,6 @@ namespace NNPTPZ1.NewtonFractals
                 Roots.Add(point);
                 colorIndexHelper = Roots.Count;
             }
-            return point;
 
         }
 
