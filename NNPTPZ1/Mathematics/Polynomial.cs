@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NNPTPZ1.Mathematics
 {
@@ -60,12 +57,13 @@ namespace NNPTPZ1.Mathematics
             {
                 ComplexNumber coefficient = Coefficients[i];
                 ComplexNumber pointCopy = point;
-                int power = i;
 
                 if (i > 0)
                 {
-                    for (int j = 0; j < power - 1; j++)
+                    for (int j = 0; j < i - 1; j++)
+                    {
                         pointCopy = pointCopy.Multiply(point);
+                    }
 
                     coefficient = coefficient.Multiply(pointCopy);
                 }
@@ -83,20 +81,23 @@ namespace NNPTPZ1.Mathematics
         public override string ToString()
         {
             string output = "";
-            int i = 0;
-            for (; i < Coefficients.Count; i++)
+
+            for (int i = 0; i < Coefficients.Count; i++)
             {
                 output += Coefficients[i];
+
                 if (i > 0)
                 {
-                    int j = 0;
-                    for (; j < i; j++)
+                    for (int j = 0; j < i; j++)
                     {
                         output += "x";
                     }
                 }
+
                 if (i + 1 < Coefficients.Count)
+                {
                     output += " + ";
+                }
             }
             return output;
         }

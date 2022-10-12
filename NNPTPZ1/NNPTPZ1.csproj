@@ -44,10 +44,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="NewtonFractal.cs" />
     <Compile Include="Mathematics\ComplexNumber.cs" />
     <Compile Include="Mathematics\Polynomial.cs" />
+    <Compile Include="Structure\MinMax.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Structure\Size.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NNPTPZ1.Mathematics
 {
     public class ComplexNumber
     {
         public double RealPart { get; set; }
-        public float ImaginaryPart { get; set; }
+        public double ImaginaryPart { get; set; }
 
         public readonly static ComplexNumber Zero = new ComplexNumber()
         {
@@ -50,27 +46,27 @@ namespace NNPTPZ1.Mathematics
             return new ComplexNumber()
             {
                 RealPart = this.RealPart * multiplicand.RealPart - this.ImaginaryPart * multiplicand.ImaginaryPart,
-                ImaginaryPart = (float)(this.RealPart * multiplicand.ImaginaryPart + this.ImaginaryPart * multiplicand.RealPart)
+                ImaginaryPart = this.RealPart * multiplicand.ImaginaryPart + this.ImaginaryPart * multiplicand.RealPart
             };
         }
 
         public ComplexNumber Divide(ComplexNumber divisor)
         {
-            var equationDivisor = Math.Pow(divisor.RealPart, 2) + Math.Pow(divisor.ImaginaryPart, 2);
+            double equationDivisor = Math.Pow(divisor.RealPart, 2) + Math.Pow(divisor.ImaginaryPart, 2);
 
             return new ComplexNumber()
             {
-                RealPart = this.RealPart * divisor.RealPart + this.ImaginaryPart * divisor.ImaginaryPart / equationDivisor,
-                ImaginaryPart = (float)(this.ImaginaryPart * divisor.RealPart - this.RealPart * divisor.ImaginaryPart / equationDivisor)
+                RealPart = (this.RealPart * divisor.RealPart + this.ImaginaryPart * divisor.ImaginaryPart) / equationDivisor,
+                ImaginaryPart = (this.ImaginaryPart * divisor.RealPart - this.RealPart * divisor.ImaginaryPart) / equationDivisor
             };
         }
 
         public double GetAbsoluteValue()
         {
-            return Math.Sqrt(RealPart * RealPart + ImaginaryPart * ImaginaryPart);
+            return Math.Sqrt(Math.Pow(RealPart, 2) + Math.Pow(ImaginaryPart, 2));
         }
 
-        public double GetAngleInDegrees()
+        public double GetAngleInRadians()
         {
             return Math.Atan(ImaginaryPart / RealPart);
         }
