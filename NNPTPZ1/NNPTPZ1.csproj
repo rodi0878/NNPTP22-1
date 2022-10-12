@@ -44,11 +44,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="NewtonFractals\Config.cs" />
+    <Compile Include="NewtonFractals\Mathematics\ComplexNumber.cs" />
+    <Compile Include="NewtonFractals\Mathematics\Polynomial.cs" />
+    <Compile Include="NewtonFractals\NewtonFractal.cs" />
+    <Compile Include="NewtonFractals\NewtonFractalsException.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
