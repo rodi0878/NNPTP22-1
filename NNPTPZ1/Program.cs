@@ -10,8 +10,11 @@ namespace NNPTPZ1
     {
         static void Main(string[] args)
         {
+            NewtonFractalToBitmapCreator creator = new NewtonFractalToBitmapCreator(args);
 
-            
+            creator.Draw();
+
+            creator.Save();
         }
     }
 }
