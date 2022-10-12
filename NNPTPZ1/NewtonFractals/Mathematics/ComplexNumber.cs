@@ -68,18 +68,12 @@ namespace NNPTPZ1.NewtonFractals.Mathematics
 
         internal ComplexNumber Divide(ComplexNumber divisor)
         {
-            ComplexNumber complexNumberDivident = this.Multiply(new ComplexNumber()
-            {
-                RealPart = divisor.RealPart,
-                ImaginaryPart = -divisor.ImaginaryPart
-            });
-
             double complexNumberDivisor = Math.Pow(divisor.RealPart, 2) + Math.Pow(divisor.ImaginaryPart, 2);
 
             return new ComplexNumber()
             {
-                RealPart = complexNumberDivident.RealPart / complexNumberDivisor,
-                ImaginaryPart = complexNumberDivident.ImaginaryPart / complexNumberDivisor
+                RealPart = divisor.RealPart / complexNumberDivisor,
+                ImaginaryPart = -divisor.ImaginaryPart / complexNumberDivisor
             };
         }
     }

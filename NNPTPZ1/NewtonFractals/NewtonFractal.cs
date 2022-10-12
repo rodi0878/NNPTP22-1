@@ -8,6 +8,7 @@ namespace NNPTPZ1.NewtonFractals
     public class NewtonFractal
     {
         private const int NewtonsIterationsAmount = 30;
+        private const string DefaultOutputFilename = "../../../out.png";
 
         private Config config;
         private double xStep;
@@ -42,34 +43,36 @@ namespace NNPTPZ1.NewtonFractals
         }
         public void Save()
         {
-            outputPaint.Save(string.IsNullOrEmpty(config.OutputFilename) ? "../../../out.png" : config.OutputFilename);
+            /*Take default path if config output filename is not set*/
+            string destinationPath = string.IsNullOrEmpty(config.OutputFilename) ? DefaultOutputFilename : config.OutputFilename;
+            outputPaint.Save(destinationPath);
         }
-        public void EvaluateToBitmap()
+        public void DrawToBitmap()
         {
             for (int i = 0; i < outputPaint.Width; i++)
             {
                 for (int j = 0; j < outputPaint.Height; j++)
                 {
-                    ComplexNumber pixelPoint = new ComplexNumber()
+                    outputPaint.SetPixel(j, i, FindColorByNewtonsIteration(new ComplexNumber()
                     {
                         RealPart = config.XMin + j * xStep,
-                        ImaginaryPart = (float)(config.YMin + i * yStep)
-                    };
-
-                    if (pixelPoint.RealPart == 0)
-                        pixelPoint.RealPart = 0.0001;
-                    if (pixelPoint.ImaginaryPart == 0)
-                        pixelPoint.ImaginaryPart = 0.0001f;
-
-                    Color pixelColor = FindColorByNewtonsIteration(pixelPoint);
-
-                    outputPaint.SetPixel(j, i, pixelColor);
+                        ImaginaryPart = config.YMin + i * yStep
+                    }));
                 }
             }
         }
-        private Color FindColorByNewtonsIteration(ComplexNumber point)
+
+        private void AvoidDivisionByZeroWithSlightDifference(ComplexNumber point)
         {
-            int iteratorCounter = 0;
+            if (point.RealPart == 0)
+                point.RealPart = 0.0001;
+            if (point.ImaginaryPart == 0)
+                point.ImaginaryPart = 0.0001f;
+        }
+
+        private void ApplyNewtonIteration(ComplexNumber point, out int iteratorCounter)
+        {
+            iteratorCounter = 0;
             for (int i = 0; i < NewtonsIterationsAmount; i++)
             {
                 ComplexNumber difference = polynomial.Evaluate(point).Divide(polynomialDerivated.Evaluate(point));
@@ -80,8 +83,12 @@ namespace NNPTPZ1.NewtonFractals
                 }
                 iteratorCounter++;
             }
+        }
+
+        private void FindFractalRoots(ComplexNumber point, out int colorIndexHelper)
+        {
             bool known = false;
-            int colorIndexHelper = 0;
+            colorIndexHelper = 0;
             for (int i = 0; i < Roots.Count; i++)
             {
                 if (Math.Pow(point.RealPart - Roots[i].RealPart, 2) + Math.Pow(point.ImaginaryPart - Roots[i].ImaginaryPart, 2) <= 0.01)
@@ -95,6 +102,16 @@ namespace NNPTPZ1.NewtonFractals
                 Roots.Add(point);
                 colorIndexHelper = Roots.Count;
             }
+        }
+
+        private Color FindColorByNewtonsIteration(ComplexNumber point)
+        {
+            AvoidDivisionByZeroWithSlightDifference(point);
+
+            ApplyNewtonIteration(point, out int iteratorCounter);
+
+            FindFractalRoots(point, out int colorIndexHelper);
+            
             Color pixelColor = colors[colorIndexHelper % colors.Length];
 
             return Color.FromArgb(

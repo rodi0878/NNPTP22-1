@@ -23,7 +23,7 @@ namespace NNPTPZ1
                     }
                 }
                 );
-            newtonFractal.EvaluateToBitmap();
+            newtonFractal.DrawToBitmap();
             newtonFractal.Save();
         }
     }
