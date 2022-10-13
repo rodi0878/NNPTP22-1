@@ -16,20 +16,17 @@ namespace NNPTPZ1.Mathematics.Tests
         [TestMethod()]
         public void AddTest()
         {
-            Cplx a = new Cplx()
-            {
+            Cplx a = new Cplx() {
                 Re = 10,
                 Imaginari = 20
             };
-            Cplx b = new Cplx()
-            {
+            Cplx b = new Cplx() {
                 Re = 1,
                 Imaginari = 2
             };
 
             Cplx actual = a.Add(b);
-            Cplx shouldBe = new Cplx()
-            {
+            Cplx shouldBe = new Cplx() {
                 Re = 11,
                 Imaginari = 22
             };
@@ -43,8 +40,7 @@ namespace NNPTPZ1.Mathematics.Tests
             r2 = b.ToString();
             Assert.AreEqual(e2, r2);
 
-            a = new Cplx()
-            {
+            a = new Cplx() {
                 Re = 1,
                 Imaginari = -1
             };
