@@ -4,8 +4,14 @@ namespace NNPTPZ1.Mathematics
 {
     public class ComplexNumber
     {
+        public readonly static ComplexNumber Zero = new ComplexNumber()
+        {
+            RealPart = 0,
+            ImaginaryPart = 0
+        };
+
         public double RealPart { get; set; }
-        public float ImaginaryPart { get; set; }
+        public double ImaginaryPart { get; set; }
 
         public override bool Equals(object obj)
         {
@@ -15,13 +21,7 @@ namespace NNPTPZ1.Mathematics
                 return complexNumber.RealPart == RealPart && complexNumber.ImaginaryPart == ImaginaryPart;
             }
             return base.Equals(obj);
-        }
-
-        public readonly static ComplexNumber Zero = new ComplexNumber()
-        {
-            RealPart = 0,
-            ImaginaryPart = 0
-        };
+        }       
 
         public ComplexNumber Multiply(ComplexNumber multiplier)
         {

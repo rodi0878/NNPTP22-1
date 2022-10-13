@@ -22,6 +22,14 @@ namespace NNPTPZ1.Mathematics
             Coefficients.Add(coefficient);
         }
 
+        public void Add(ComplexNumber[] coefficients)
+        {
+            foreach (var item in coefficients)
+            {
+                Coefficients.Add(item);
+            }
+        }
+
         /// <summary>
         /// Derives this polynomial and creates new one
         /// </summary>
@@ -89,8 +97,7 @@ namespace NNPTPZ1.Mathematics
                 result += Coefficients[i];
                 if (i > 0)
                 {
-                    int j = 0;
-                    for (; j < i; j++)
+                    for (int j = 0; j < i; j++)
                     {
                         result += "x";
                     }
