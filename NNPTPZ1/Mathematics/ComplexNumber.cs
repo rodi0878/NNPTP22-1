@@ -6,6 +6,11 @@ namespace Mathematics
     {
         public double RealPart { get; set; }
         public double ImaginaryPart { get; set; }
+        public readonly static ComplexNumber Zero = new ComplexNumber()
+        {
+            RealPart = 0,
+            ImaginaryPart = 0
+        };
 
         public override bool Equals(object objectToCompare)
         {
@@ -17,12 +22,6 @@ namespace Mathematics
             return base.Equals(objectToCompare);
         }
 
-        public readonly static ComplexNumber Zero = new ComplexNumber()
-        {
-            RealPart = 0,
-            ImaginaryPart = 0
-        };
-
         public ComplexNumber Multiply(ComplexNumber complexNumberToMultiply)
         {
             return new ComplexNumber()
@@ -32,7 +31,7 @@ namespace Mathematics
             };
         }
 
-        public double GetAbS()
+        public double GetAbs()
         {
             return Math.Sqrt(RealPart * RealPart + ImaginaryPart * ImaginaryPart);
         }
@@ -46,7 +45,7 @@ namespace Mathematics
             };
         }
 
-        public double GetAngleInDegrees()
+        public double GetAngleInRadians()
         {
             return Math.Atan(ImaginaryPart / RealPart);
         }

@@ -55,6 +55,68 @@ namespace NNPTPZ1
             Console.WriteLine(DerivedPolynomial);
         }
 
+        private int FindSolutionRootNumber(ComplexNumber complexNumber)
+        {
+            bool known = false;
+            int id = 0;
+            for (int k = 0; k < Roots.Count; k++)
+            {
+                if (Math.Pow(complexNumber.RealPart - Roots[k].RealPart, 2) + Math.Pow(complexNumber.ImaginaryPart - Roots[k].ImaginaryPart, 2) <= 0.01)
+                {
+                    known = true;
+                    id = k;
+                }
+            }
+            if (!known)
+            {
+                Roots.Add(complexNumber);
+                id = Roots.Count;
+            }
+            return id;
+        }
+
+        private ComplexNumber CreateComplexNumberFromCoordinations(double x, double y)
+        {
+            ComplexNumber complexNumber = new ComplexNumber()
+            {
+                RealPart = x,
+                ImaginaryPart = y
+            };
+
+            if (complexNumber.RealPart == 0)
+            {
+                complexNumber.RealPart = 0.0001;
+            }
+            if (complexNumber.ImaginaryPart == 0)
+            {
+                complexNumber.ImaginaryPart = 0.0001f;
+            }
+            return complexNumber;
+        }
+
+        private ComplexNumber ProcessIterations(ComplexNumber complexNumber, int maxIterations, out int iterations)
+        {
+            iterations = 0;
+            for (int k = 0; k < maxIterations; k++)
+            {
+                ComplexNumber diffComplexNumber = Polynomial.Eval(complexNumber).Divide(DerivedPolynomial.Eval(complexNumber));
+                complexNumber = complexNumber.Subtract(diffComplexNumber);
+                if (Math.Pow(diffComplexNumber.RealPart, 2) + Math.Pow(diffComplexNumber.ImaginaryPart, 2) >= 0.5)
+                {
+                    k--;
+                }
+                iterations++;
+            }
+            return complexNumber;
+        }
+
+        private Color GetColorAccordingToRootNumber(ComplexNumber complexNumber, int iterations, int maxColorDepth)
+        {
+            Color color = Colors[FindSolutionRootNumber(complexNumber) % Colors.Length];
+            color = Color.FromArgb(Math.Min(Math.Max(0, color.R - iterations * 2), maxColorDepth), Math.Min(Math.Max(0, color.G - iterations * 2), maxColorDepth), Math.Min(Math.Max(0, color.B - iterations * 2), maxColorDepth));
+            return color;
+        }
+
         public void Generate()
         {
             int maxIterations = 30;
@@ -70,56 +132,14 @@ namespace NNPTPZ1
                     // find "world" coordinates of pixel
                     double x = XMin + j * xStep;
                     double y = YMin + i * yStep;
-
-                    ComplexNumber complexNumber = new ComplexNumber()
-                    {
-                        RealPart = x,
-                        ImaginaryPart = y
-                    };
-
-                    if (complexNumber.RealPart == 0)
-                    {
-                        complexNumber.RealPart = 0.0001;
-                    }
-                    if (complexNumber.ImaginaryPart == 0)
-                    {
-                        complexNumber.ImaginaryPart = 0.0001f;
-                    }
+                    ComplexNumber complexNumber = CreateComplexNumberFromCoordinations(x, y);
 
                     // find solution of equation using newton's iteration
-                    int iterations = 0;
-                    for (int k = 0; k < maxIterations; k++)
-                    {
-                        ComplexNumber diffComplexNumber = Polynomial.Eval(complexNumber).Divide(DerivedPolynomial.Eval(complexNumber));
-                        complexNumber = complexNumber.Subtract(diffComplexNumber);
-                        if (Math.Pow(diffComplexNumber.RealPart, 2) + Math.Pow(diffComplexNumber.ImaginaryPart, 2) >= 0.5)
-                        {
-                            k--;
-                        }
-                        iterations++;
-                    }
-
-                    // find solution root number
-                    bool known = false;
-                    int id = 0;
-                    for (int k = 0; k < Roots.Count; k++)
-                    {
-                        if (Math.Pow(complexNumber.RealPart - Roots[k].RealPart, 2) + Math.Pow(complexNumber.ImaginaryPart - Roots[k].ImaginaryPart, 2) <= 0.01)
-                        {
-                            known = true;
-                            id = k;
-                        }
-                    }
-                    if (!known)
-                    {
-                        Roots.Add(complexNumber);
-                        id = Roots.Count;
-                    }
+                    complexNumber = ProcessIterations(complexNumber, maxIterations, out int iterations);
 
                     // colorize pixel according to root number
-                    Color color = Colors[id % Colors.Length];
-                    color = Color.FromArgb(color.R, color.G, color.B);
-                    color = Color.FromArgb(Math.Min(Math.Max(0, color.R - iterations * 2), maxColorDepth), Math.Min(Math.Max(0, color.G - iterations * 2), maxColorDepth), Math.Min(Math.Max(0, color.B - iterations * 2), maxColorDepth));
+                    Color color = GetColorAccordingToRootNumber(complexNumber, iterations, maxColorDepth);
+                   
                     bitmap.SetPixel(j, i, color);
                 }
             }
