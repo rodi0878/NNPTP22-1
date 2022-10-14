@@ -25,82 +25,82 @@ namespace NNPTPZ1
     {
         static void Main(string[] args)
         {
-            int[] intargs = new int[2];
-            for (int i = 0; i < intargs.Length; i++)
+            int[] intArgs = new int[2];
+            for (int i = 0; i < intArgs.Length; i++)
             {
-                intargs[i] = int.Parse(args[i]);
+                intArgs[i] = int.Parse(args[i]);
             }
-            double[] doubleargs = new double[4];
-            for (int i = 0; i < doubleargs.Length; i++)
+            double[] doubleArgs = new double[4];
+            for (int i = 0; i < doubleArgs.Length; i++)
             {
-                doubleargs[i] = double.Parse(args[i + 2]);
+                doubleArgs[i] = double.Parse(args[i + 2]);
             }
             string output = args[6];
             // TODO: add parameters from args?
-            Bitmap bmp = new Bitmap(intargs[0], intargs[1]);
-            double xmin = doubleargs[0];
-            double xmax = doubleargs[1];
-            double ymin = doubleargs[2];
-            double ymax = doubleargs[3];
+            Bitmap bitmap = new Bitmap(intArgs[0], intArgs[1]);
+            double xMin = doubleArgs[0];
+            double xMax = doubleArgs[1];
+            double yMin = doubleArgs[2];
+            double yMax = doubleArgs[3];
 
-            double xstep = (xmax - xmin) / intargs[0];
-            double ystep = (ymax - ymin) / intargs[1];
+            double xStep = (xMax - xMin) / intArgs[0];
+            double yStep = (yMax - yMin) / intArgs[1];
 
-            List<Cplx> koreny = new List<Cplx>();
+            List<ComplexNumber> roots = new List<ComplexNumber>();
             // TODO: poly should be parameterised?
-            Poly p = new Poly();
-            p.Coe.Add(new Cplx() { Re = 1 });
-            p.Coe.Add(Cplx.Zero);
-            p.Coe.Add(Cplx.Zero);
-            //p.Coe.Add(Cplx.Zero);
-            p.Coe.Add(new Cplx() { Re = 1 });
-            Poly ptmp = p;
-            Poly pd = p.Derive();
+            Poly poly = new Poly();
+            poly.Coefficients.Add(new ComplexNumber() { Real = 1 });
+            poly.Coefficients.Add(ComplexNumber.Zero);
+            poly.Coefficients.Add(ComplexNumber.Zero);
+            //p.Coefficients.Add(ComplexNumber.Zero);
+            poly.Coefficients.Add(new ComplexNumber() { Real = 1 });
+            Poly tempPoly = poly;
+            Poly derivedPoly = poly.Derive();
 
-            Console.WriteLine(p);
-            Console.WriteLine(pd);
+            Console.WriteLine(poly);
+            Console.WriteLine(derivedPoly);
 
-            var clrs = new Color[]
+            var colors = new Color[]
             {
                 Color.Red, Color.Blue, Color.Green, Color.Yellow, Color.Orange, Color.Fuchsia, Color.Gold, Color.Cyan, Color.Magenta
             };
 
-            var maxid = 0;
+            var maxId = 0;
 
             // TODO: cleanup!!!
             // for every pixel in image...
-            for (int i = 0; i < intargs[0]; i++)
+            for (int i = 0; i < intArgs[0]; i++)
             {
-                for (int j = 0; j < intargs[1]; j++)
+                for (int j = 0; j < intArgs[1]; j++)
                 {
                     // find "world" coordinates of pixel
-                    double y = ymin + i * ystep;
-                    double x = xmin + j * xstep;
+                    double y = yMin + i * yStep;
+                    double x = xMin + j * xStep;
 
-                    Cplx ox = new Cplx()
+                    ComplexNumber ox = new ComplexNumber()
                     {
-                        Re = x,
-                        Imaginari = (float)(y)
+                        Real = x,
+                        Imaginary = y
                     };
 
-                    if (ox.Re == 0)
-                        ox.Re = 0.0001;
-                    if (ox.Imaginari == 0)
-                        ox.Imaginari = 0.0001f;
+                    if (ox.Real == 0)
+                        ox.Real = 0.0001;
+                    if (ox.Imaginary == 0)
+                        ox.Imaginary = 0.0001f;
 
                     //Console.WriteLine(ox);
 
                     // find solution of equation using newton's iteration
                     float it = 0;
-                    for (int q = 0; q< 30; q++)
+                    for (int k = 0; k < 30; k++)
                     {
-                        var diff = p.Eval(ox).Divide(pd.Eval(ox));
+                        var diff = poly.Eval(ox).Divide(derivedPoly.Eval(ox));
                         ox = ox.Subtract(diff);
 
                         //Console.WriteLine($"{q} {ox} -({diff})");
-                        if (Math.Pow(diff.Re, 2) + Math.Pow(diff.Imaginari, 2) >= 0.5)
+                        if (Math.Pow(diff.Real, 2) + Math.Pow(diff.Imaginary, 2) >= 0.5)
                         {
-                            q--;
+                            k--;
                         }
                         it++;
                     }
@@ -110,29 +110,29 @@ namespace NNPTPZ1
                     // find solution root number
                     var known = false;
                     var id = 0;
-                    for (int w = 0; w <koreny.Count;w++)
+                    for (int l = 0; l < roots.Count; l++)
                     {
-                        if (Math.Pow(ox.Re- koreny[w].Re, 2) + Math.Pow(ox.Imaginari - koreny[w].Imaginari, 2) <= 0.01)
+                        if (Math.Pow(ox.Real - roots[l].Real, 2) + Math.Pow(ox.Imaginary - roots[l].Imaginary, 2) <= 0.01)
                         {
                             known = true;
-                            id = w;
+                            id = l;
                         }
                     }
                     if (!known)
                     {
-                        koreny.Add(ox);
-                        id = koreny.Count;
-                        maxid = id + 1; 
+                        roots.Add(ox);
+                        id = roots.Count;
+                        maxId = id + 1;
                     }
 
                     // colorize pixel according to root number
                     //int vv = id;
                     //int vv = id * 50 + (int)it*5;
-                    var vv = clrs[id % clrs.Length];
-                    vv = Color.FromArgb(vv.R, vv.G, vv.B);
-                    vv = Color.FromArgb(Math.Min(Math.Max(0, vv.R-(int)it*2), 255), Math.Min(Math.Max(0, vv.G - (int)it*2), 255), Math.Min(Math.Max(0, vv.B - (int)it*2), 255));
+                    var selectedColor = colors[id % colors.Length];
+                    selectedColor = Color.FromArgb(selectedColor.R, selectedColor.G, selectedColor.B);
+                    selectedColor = Color.FromArgb(Math.Min(Math.Max(0, selectedColor.R - (int)it * 2), 255), Math.Min(Math.Max(0, selectedColor.G - (int)it * 2), 255), Math.Min(Math.Max(0, selectedColor.B - (int)it * 2), 255));
                     //vv = Math.Min(Math.Max(0, vv), 255);
-                    bmp.SetPixel(j, i, vv);
+                    bitmap.SetPixel(j, i, selectedColor);
                     //bmp.SetPixel(j, i, Color.FromArgb(vv, vv, vv));
                 }
             }
@@ -148,7 +148,7 @@ namespace NNPTPZ1
             //    }
             //}
 
-                    bmp.Save(output ?? "../../../out.png");
+            bitmap.Save(output ?? "../../../out.png");
             //Console.ReadKey();
         }
     }
@@ -158,17 +158,16 @@ namespace NNPTPZ1
         public class Poly
         {
             /// <summary>
-            /// Coe
+            /// Coefficients
             /// </summary>
-            public List<Cplx> Coe { get; set; }
+            public List<ComplexNumber> Coefficients { get; set; }
 
             /// <summary>
             /// Constructor
             /// </summary>
-            public Poly() => Coe = new List<Cplx>();
+            public Poly() => Coefficients = new List<ComplexNumber>();
 
-            public void Add(Cplx coe) =>
-                Coe.Add(coe);
+            public void Add(ComplexNumber Coefficients) => Coefficients.Add(Coefficients);
 
             /// <summary>
             /// Derives this polynomial and creates new one
@@ -176,13 +175,13 @@ namespace NNPTPZ1
             /// <returns>Derivated polynomial</returns>
             public Poly Derive()
             {
-                Poly p = new Poly();
-                for (int q = 1; q < Coe.Count; q++)
+                Poly polyDerivate = new Poly();
+                for (int coefficientNumber = 1; coefficientNumber < Coefficients.Count; coefficientNumber++)
                 {
-                    p.Coe.Add(Coe[q].Multiply(new Cplx() { Re = q }));
+                    polyDerivate.Coefficients.Add(Coefficients[coefficientNumber].Multiply(new ComplexNumber() { Real = coefficientNumber }));
                 }
 
-                return p;
+                return polyDerivate;
             }
 
             /// <summary>
@@ -190,10 +189,9 @@ namespace NNPTPZ1
             /// </summary>
             /// <param name="x">point of evaluation</param>
             /// <returns>y</returns>
-            public Cplx Eval(double x)
+            public ComplexNumber Eval(double x)
             {
-                var y = Eval(new Cplx() { Re = x, Imaginari = 0 });
-                return y;
+                return Eval(new ComplexNumber() { Real = x, Imaginary = 0 });
             }
 
             /// <summary>
@@ -201,27 +199,26 @@ namespace NNPTPZ1
             /// </summary>
             /// <param name="x">point of evaluation</param>
             /// <returns>y</returns>
-            public Cplx Eval(Cplx x)
+            public ComplexNumber Eval(ComplexNumber x)
             {
-                Cplx s = Cplx.Zero;
-                for (int i = 0; i < Coe.Count; i++)
+                ComplexNumber startingComplexNumber = ComplexNumber.Zero;
+                for (int i = 0; i < Coefficients.Count; i++)
                 {
-                    Cplx coef = Coe[i];
-                    Cplx bx = x;
+                    ComplexNumber coefficient = Coefficients[i];
                     int power = i;
 
                     if (i > 0)
                     {
                         for (int j = 0; j < power - 1; j++)
-                            bx = bx.Multiply(x);
+                            x = x.Multiply(x);
 
-                        coef = coef.Multiply(bx);
+                        coefficient = coefficient.Multiply(x);
                     }
 
-                    s = s.Add(coef);
+                    startingComplexNumber = startingComplexNumber.Add(coefficient);
                 }
 
-                return s;
+                return startingComplexNumber;
             }
 
             /// <summary>
@@ -230,102 +227,98 @@ namespace NNPTPZ1
             /// <returns>String repr of polynomial</returns>
             public override string ToString()
             {
-                string s = "";
-                int i = 0;
-                for (; i < Coe.Count; i++)
+                string output = "";        
+                for (int i = 0; i < Coefficients.Count; i++)
                 {
-                    s += Coe[i];
-                    if (i > 0)
-                    {
-                        int j = 0;
-                        for (; j < i; j++)
+                    output += Coefficients[i];
+
+                        for (int j = 0; j < i; j++)
                         {
-                            s += "x";
+                            output += "x";
                         }
-                    }
-                    if (i+1<Coe.Count)
-                    s += " + ";
+                  
+                    if (i + 1 < Coefficients.Count)
+                        output += " + ";
                 }
-                return s;
+                return output;
             }
         }
 
-        public class Cplx
+        public class ComplexNumber
         {
-            public double Re { get; set; }
-            public float Imaginari { get; set; }
+            public double Real { get; set; }
+            public double Imaginary { get; set; }
 
             public override bool Equals(object obj)
             {
-                if (obj is Cplx)
+                if (obj is ComplexNumber)
                 {
-                    Cplx x = obj as Cplx;
-                    return x.Re == Re && x.Imaginari == Imaginari;
+                    ComplexNumber numberForComparision = obj as ComplexNumber;
+                    return numberForComparision.Real == Real && numberForComparision.Imaginary == Imaginary;
                 }
                 return base.Equals(obj);
             }
 
-            public readonly static Cplx Zero = new Cplx()
+            public readonly static ComplexNumber Zero = new ComplexNumber()
             {
-                Re = 0,
-                Imaginari = 0
+                Real = 0,
+                Imaginary = 0
             };
 
-            public Cplx Multiply(Cplx b)
+            public ComplexNumber Multiply(ComplexNumber argumentComplexNumber)
             {
-                Cplx a = this;
-                // aRe*bRe + aRe*bIm*i + aIm*bRe*i + aIm*bIm*i*i
-                return new Cplx()
+                ComplexNumber baseComplexNumber = this;
+                return new ComplexNumber()
                 {
-                    Re = a.Re * b.Re - a.Imaginari * b.Imaginari,
-                    Imaginari = (float)(a.Re * b.Imaginari + a.Imaginari * b.Re)
+                    Real = baseComplexNumber.Real * argumentComplexNumber.Real - baseComplexNumber.Imaginary * argumentComplexNumber.Imaginary,
+                    Imaginary = baseComplexNumber.Real * argumentComplexNumber.Imaginary + baseComplexNumber.Imaginary * argumentComplexNumber.Real
                 };
             }
             public double GetAbS()
             {
-                return Math.Sqrt( Re * Re + Imaginari * Imaginari);
+                return Math.Sqrt(Real * Real + Imaginary * Imaginary);
             }
 
-            public Cplx Add(Cplx b)
+            public ComplexNumber Add(ComplexNumber argumentComplexNumber)
             {
-                Cplx a = this;
-                return new Cplx()
+                ComplexNumber baseComplexNumber = this;
+                return new ComplexNumber()
                 {
-                    Re = a.Re + b.Re,
-                    Imaginari = a.Imaginari + b.Imaginari
+                    Real = baseComplexNumber.Real + argumentComplexNumber.Real,
+                    Imaginary = baseComplexNumber.Imaginary + argumentComplexNumber.Imaginary
                 };
             }
             public double GetAngleInDegrees()
             {
-                return Math.Atan(Imaginari / Re);
+                return Math.Atan(Imaginary / Real);
             }
-            public Cplx Subtract(Cplx b)
+            public ComplexNumber Subtract(ComplexNumber argumentComplexNumber)
             {
-                Cplx a = this;
-                return new Cplx()
+                ComplexNumber baseComplexNumber = this;
+                return new ComplexNumber()
                 {
-                    Re = a.Re - b.Re,
-                    Imaginari = a.Imaginari - b.Imaginari
+                    Real = baseComplexNumber.Real - argumentComplexNumber.Real,
+                    Imaginary = baseComplexNumber.Imaginary - argumentComplexNumber.Imaginary
                 };
             }
 
             public override string ToString()
             {
-                return $"({Re} + {Imaginari}i)";
+                return $"({Real} + {Imaginary}i)";
             }
 
-            internal Cplx Divide(Cplx b)
+            internal ComplexNumber Divide(ComplexNumber b)
             {
-                // (aRe + aIm*i) / (bRe + bIm*i)
-                // ((aRe + aIm*i) * (bRe - bIm*i)) / ((bRe + bIm*i) * (bRe - bIm*i))
-                //  bRe*bRe - bIm*bIm*i*i
-                var tmp = this.Multiply(new Cplx() { Re = b.Re, Imaginari = -b.Imaginari });
-                var tmp2 = b.Re * b.Re + b.Imaginari * b.Imaginari;
+                // (aReal + aIm*i) / (bReal + bIm*i)
+                // ((aReal + aIm*i) * (bReal - bIm*i)) / ((bReal + bIm*i) * (bReal - bIm*i))
+                //  bReal*bReal - bIm*bIm*i*i
+                var tmp = this.Multiply(new ComplexNumber() { Real = b.Real, Imaginary = -b.Imaginary });
+                var tmp2 = b.Real * b.Real + b.Imaginary * b.Imaginary;
 
-                return new Cplx()
+                return new ComplexNumber()
                 {
-                    Re = tmp.Re / tmp2,
-                    Imaginari = (float)(tmp.Imaginari / tmp2)
+                    Real = tmp.Real / tmp2,
+                    Imaginary = tmp.Imaginary / tmp2
                 };
             }
         }
