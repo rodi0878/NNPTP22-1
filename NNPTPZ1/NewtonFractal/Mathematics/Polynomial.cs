@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace NNPTPZ1.Mathematics
+namespace NNPTPZ1.NewtonFractal.Mathematics
 {
     public class Polynomial
     {
@@ -65,8 +65,10 @@ namespace NNPTPZ1.Mathematics
                     {
                         multipliedPoint = multipliedPoint.Multiply(point);
                     }
+
                     coefficient = coefficient.Multiply(multipliedPoint);
                 }
+
                 result = result.Add(coefficient);
             }
 
@@ -84,6 +86,7 @@ namespace NNPTPZ1.Mathematics
             for (int i = 0; i < Coefficients.Count; i++)
             {
                 result += Coefficients[i];
+
                 if (i > 0)
                 {
                     for (int j = 0; j < i; j++)
@@ -91,11 +94,13 @@ namespace NNPTPZ1.Mathematics
                         result += "x";
                     }
                 }
+
                 if (i + 1 < Coefficients.Count)
                 {
                     result += " + ";
                 }
             }
+
             return result;
         }
     }

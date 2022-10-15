@@ -1,11 +1,12 @@
 ﻿using System;
 
-namespace NNPTPZ1.Mathematics
+namespace NNPTPZ1.NewtonFractal.Mathematics
 {
     public class ComplexNumber
     {
         public double RealPart { get; set; }
-        public float ImaginaryPart { get; set; }
+        public double ImaginaryPart { get; set; }
+        public static readonly ComplexNumber Zero = new ComplexNumber { RealPart = 0, ImaginaryPart = 0 };
 
         public override bool Equals(object obj)
         {
@@ -13,14 +14,9 @@ namespace NNPTPZ1.Mathematics
             {
                 return complexNumber.RealPart == RealPart && complexNumber.ImaginaryPart == ImaginaryPart;
             }
+
             return base.Equals(obj);
         }
-
-        public static readonly ComplexNumber Zero = new ComplexNumber
-        {
-            RealPart = 0,
-            ImaginaryPart = 0
-        };
 
         public ComplexNumber Multiply(ComplexNumber multiplier) => new ComplexNumber
         {

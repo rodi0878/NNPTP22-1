@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NNPTPZ1.Mathematics;
+using NNPTPZ1.NewtonFractal.Mathematics;
 
 namespace NNPTPZ1Tests
 {
