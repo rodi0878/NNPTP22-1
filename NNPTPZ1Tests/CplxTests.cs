@@ -16,50 +16,50 @@ namespace NNPTPZ1.Mathematics.Tests
         [TestMethod()]
         public void AddTest()
         {
-            ComplexNumber a = new ComplexNumber()
+            ComplexNumber baseComplexNumber = new ComplexNumber()
             {
                 RealPart = 10,
                 ImaginaryPart = 20
             };
-            ComplexNumber b = new ComplexNumber()
+            ComplexNumber addedComplexNumber = new ComplexNumber()
             {
                 RealPart = 1,
                 ImaginaryPart = 2
             };
 
-            ComplexNumber actual = a.Add(b);
-            ComplexNumber shouldBe = new ComplexNumber()
+            ComplexNumber actual = baseComplexNumber.Add(addedComplexNumber);
+            ComplexNumber expected = new ComplexNumber()
             {
                 RealPart = 11,
                 ImaginaryPart = 22
             };
 
-            Assert.AreEqual(shouldBe, actual);
+            Assert.AreEqual(expected, actual);
 
-            var e2 = "(10 + 20i)";
-            var r2 = a.ToString();
-            Assert.AreEqual(e2, r2);
-            e2 = "(1 + 2i)";
-            r2 = b.ToString();
-            Assert.AreEqual(e2, r2);
+            var expectedString = "(10 + 20i)";
+            var actualString = baseComplexNumber.ToString();
+            Assert.AreEqual(expectedString, actualString);
+            expectedString = "(1 + 2i)";
+            actualString = addedComplexNumber.ToString();
+            Assert.AreEqual(expectedString, actualString);
 
-            a = new ComplexNumber()
+            baseComplexNumber = new ComplexNumber()
             {
                 RealPart = 1,
                 ImaginaryPart = -1
             };
-            b = new ComplexNumber() { RealPart = 0, ImaginaryPart = 0 };
-            shouldBe = new ComplexNumber() { RealPart = 1, ImaginaryPart = -1 };
-            actual = a.Add(b);
-            Assert.AreEqual(shouldBe, actual);
+            addedComplexNumber = new ComplexNumber() { RealPart = 0, ImaginaryPart = 0 };
+            expected = new ComplexNumber() { RealPart = 1, ImaginaryPart = -1 };
+            actual = baseComplexNumber.Add(addedComplexNumber);
+            Assert.AreEqual(expected, actual);
 
-            e2 = "(1 + -1i)";
-            r2 = a.ToString();
-            Assert.AreEqual(e2, r2);
+            expectedString = "(1 + -1i)";
+            actualString = baseComplexNumber.ToString();
+            Assert.AreEqual(expectedString, actualString);
 
-            e2 = "(0 + 0i)";
-            r2 = b.ToString();
-            Assert.AreEqual(e2, r2);
+            expectedString = "(0 + 0i)";
+            actualString = addedComplexNumber.ToString();
+            Assert.AreEqual(expectedString, actualString);
         }
 
         [TestMethod()]
@@ -82,6 +82,28 @@ namespace NNPTPZ1.Mathematics.Tests
             var r2 = poly.ToString();
             var e2 = "(1 + 0i) + (0 + 0i)x + (1 + 0i)xx";
             Assert.AreEqual(e2, r2);
+        }
+        [TestMethod()]
+        public void MultiplyTest()
+        {
+            ComplexNumber baseComplexNumber = new ComplexNumber()
+            {
+                RealPart = 10,
+                ImaginaryPart = 20
+            };
+            ComplexNumber multiplyingComplexNumber = new ComplexNumber()
+            {
+                RealPart = 3,
+                ImaginaryPart = 4
+            };
+
+            ComplexNumber actual = baseComplexNumber.Multiply(multiplyingComplexNumber);
+            ComplexNumber expected = new ComplexNumber()
+            {
+                RealPart = -50,
+                ImaginaryPart = 100
+            };
+            Assert.AreEqual(expected, actual);
         }
     }
 }
