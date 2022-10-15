@@ -1,53 +1,61 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO;
-using System.Drawing;
-using System.Drawing.Design;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
-using System.Drawing.Printing;
-using System.Drawing.Text;
-using System.Drawing.Drawing2D;
-using System.Linq.Expressions;
-using System.Threading;
 
 
 namespace NNPTPZ1
 {
     /// <summary>
-    /// This program should produce Newton fractals.
+    /// This program produces Newton fractals.
     /// See more at: https://en.wikipedia.org/wiki/Newton_fractal
     /// </summary>
     class Program
     {
         static void Main(string[] args)
         {
-            //int widthOfImageInPixels = int.Parse(args[0]);
-            //int heightOfImageInPixels = int.Parse(args[1]);
-            //double xmin = double.Parse(args[2]);
-            //double xmax = double.Parse(args[3]);
-            //double ymin = double.Parse(args[4]);
-            //double ymax = double.Parse(args[5]);
-            int widthOfImageInPixels = 200;
-            int heightOfImageInPixels = 200;
-            double xmin = -20;
-            double xmax = 20;
-            double ymin = -20;
-            double ymax = 20;
-            string pathToImageFile = "../../../out.png";
-            //if (args.Length == 7)
-            //{
-            //    pathToImageFile = "../../../out.png";
-            //}
-            FractalGenerator fractalVisualiser = new FractalGenerator(widthOfImageInPixels, heightOfImageInPixels, xmin, xmax, ymin, ymax);
-            fractalVisualiser.generateFractalImage(pathToImageFile);
+            try
+            {
+                int imageWidth;
+                int imageHeight;
+                double xMin;
+                double xMax;
+                double yMin;
+                double yMax;
+                string pathToImageFile;
+                if (args.Length == 7)
+                {
+                    imageWidth = int.Parse(args[0]);
+                    imageHeight = int.Parse(args[1]);
+                    xMin = double.Parse(args[2]);
+                    xMax = double.Parse(args[3]);
+                    yMin = double.Parse(args[4]);
+                    yMax = double.Parse(args[5]);
+                    pathToImageFile = args[6];
+                }
+                else
+                {
+                    imageWidth = 500;
+                    imageHeight = 500;
+                    xMin = -38;
+                    xMax = 68;
+                    yMin = -10;
+                    yMax = 33;
+                    pathToImageFile = "../../../out.png";
+                }
+
+
+                FractalGenerator fractalVisualiser = new FractalGenerator(imageWidth, imageHeight, xMin, xMax, yMin, yMax);
+                fractalVisualiser.GenerateFractalImage(pathToImageFile);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Invalid number of arguments or invalid argument type");
+            }
+
+
+
         }
     }
-    }
+}
 
-    
+
 
 

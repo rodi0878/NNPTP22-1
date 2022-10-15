@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Drawing;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NNPTPZ1
 {
@@ -34,8 +31,6 @@ namespace NNPTPZ1
 
         private double xStep;
         private double yStep;
-        //private string outputLocation;
-        //private List<ComplexNumber> roots;
 
         public FractalGenerator(int bitmapWidth, int bitmapHeight, double xMin, double xMax, double yMin, double yMax)
         {
@@ -55,22 +50,22 @@ namespace NNPTPZ1
             bitmap = new Bitmap(bitmapWidth, bitmapHeight);
         }
 
-        public void generateFractalImage(string pathToImageFile)
+        public void GenerateFractalImage(string pathToImageFile)
         {
-            createBitmap(polynomial, derivatedPolynomial, xStep, yStep);
+            FillBitmap(polynomial, derivatedPolynomial, xStep, yStep);
             bitmap.Save(pathToImageFile ?? "../../../out.png");
             bitmap.Dispose();
         }
 
-        private void createBitmap(Polynomial polynom, Polynomial polynomDerivative, double xstep, double ystep)
+        private void FillBitmap(Polynomial polynomomial, Polynomial derivatedPolynomial, double xStep, double yStep)
         {
             List<ComplexNumber> roots = new List<ComplexNumber>();
             for (int x = 0; x < bitmapWidth; x++)
             {
                 for (int y = 0; y < bitmapHeight; y++)
                 {
-                    ComplexNumber startingRoot = GenerateStartingRoot(xstep, ystep, x, y);
-                    colorizePixel(x, y, CalculateNewtonsIterations(polynom, polynomDerivative, ref startingRoot), findRootInList(roots, startingRoot));
+                    ComplexNumber startingRoot = GenerateStartingRoot(xStep, yStep, x, y);
+                    FillPixel(x, y, CalculateNewtonsIterations(polynomomial, derivatedPolynomial, ref startingRoot), FindRootInList(roots, startingRoot));
                 }
             }
         }
@@ -93,20 +88,20 @@ namespace NNPTPZ1
             return root;
         }
 
-        private void colorizePixel(int x, int y, int numberOfTotalIterations, int actualRootPosition)
+        private void FillPixel(int x, int y, int iterations, int rootNumber)
         {
-            Color selectedColor = colors[actualRootPosition % colors.Length];
-            selectedColor = Color.FromArgb(Math.Min(Math.Max(0, selectedColor.R - numberOfTotalIterations * 2), 255), Math.Min(Math.Max(0, selectedColor.G - numberOfTotalIterations * 2), 255), Math.Min(Math.Max(0, selectedColor.B - numberOfTotalIterations * 2), 255));
+            Color selectedColor = colors[rootNumber % colors.Length];
+            selectedColor = Color.FromArgb(Math.Min(Math.Max(0, selectedColor.R - iterations * 2), 255), Math.Min(Math.Max(0, selectedColor.G - iterations * 2), 255), Math.Min(Math.Max(0, selectedColor.B - iterations * 2), 255));
             bitmap.SetPixel(x, y, selectedColor);
         }
 
-        private static int findRootInList(List<ComplexNumber> roots, ComplexNumber functionRoot)
+        private static int FindRootInList(List<ComplexNumber> rootList, ComplexNumber rootOfFunction)
         {
             bool rootFound = false;
             int rootNumber = 0;
-            for (int i = 0; i < roots.Count; i++)
+            for (int i = 0; i < rootList.Count; i++)
             {
-                if (Math.Pow(functionRoot.RealPart - roots[i].RealPart, 2) + Math.Pow(functionRoot.ImaginaryPart - roots[i].ImaginaryPart, 2) <= 0.01)
+                if (Math.Pow(rootOfFunction.RealPart - rootList[i].RealPart, 2) + Math.Pow(rootOfFunction.ImaginaryPart - rootList[i].ImaginaryPart, 2) <= 0.01)
                 {
                     rootFound = true;
                     rootNumber = i;
@@ -114,8 +109,8 @@ namespace NNPTPZ1
             }
             if (!rootFound)
             {
-                roots.Add(functionRoot);
-                rootNumber = roots.Count;
+                rootList.Add(rootOfFunction);
+                rootNumber = rootList.Count;
             }
 
             return rootNumber;
@@ -123,7 +118,7 @@ namespace NNPTPZ1
 
         private static int CalculateNewtonsIterations(Polynomial polynomial, Polynomial derivatedPolynomial, ref ComplexNumber root)
         {
-            int numberOfTotalIterations = 0;
+            int calculatedIterations = 0;
             for (int i = 0; i < 30; i++)
             {
                 var result = polynomial.Eval(root).Divide(derivatedPolynomial.Eval(root));
@@ -133,10 +128,10 @@ namespace NNPTPZ1
                 {
                     i--;
                 }
-               numberOfTotalIterations++;
+                calculatedIterations++;
             }
 
-            return numberOfTotalIterations;
+            return calculatedIterations;
         }
     }
 }

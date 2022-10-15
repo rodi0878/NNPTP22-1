@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace NNPTPZ1
 {
@@ -30,13 +26,13 @@ namespace NNPTPZ1
         /// <returns>Derivated polynomial</returns>
         public Polynomial Derive()
         {
-            Polynomial polyDerivate = new Polynomial();
+            Polynomial polynomialDerivate = new Polynomial();
             for (int coefficientNumber = 1; coefficientNumber < Coefficients.Count; coefficientNumber++)
             {
-                polyDerivate.Coefficients.Add(Coefficients[coefficientNumber].Multiply(new ComplexNumber() { RealPart = coefficientNumber }));
+                polynomialDerivate.Coefficients.Add(Coefficients[coefficientNumber].Multiply(new ComplexNumber() { RealPart = coefficientNumber }));
             }
 
-            return polyDerivate;
+            return polynomialDerivate;
         }
 
         /// <summary>
@@ -56,24 +52,25 @@ namespace NNPTPZ1
         /// <returns>y</returns>
         public ComplexNumber Eval(ComplexNumber realXInComplexNumber)
         {
-            ComplexNumber startingComplexNumber = ComplexNumber.Zero;
+            ComplexNumber startingComplexNumbers = ComplexNumber.Zero;
             for (int i = 0; i < Coefficients.Count; i++)
             {
                 ComplexNumber coefficient = Coefficients[i];
+                ComplexNumber complexNumberWithRealX = realXInComplexNumber;
                 int power = i;
 
                 if (i > 0)
                 {
                     for (int j = 0; j < power - 1; j++)
-                        realXInComplexNumber = realXInComplexNumber.Multiply(realXInComplexNumber);
+                        complexNumberWithRealX = complexNumberWithRealX.Multiply(realXInComplexNumber);
 
-                    coefficient = coefficient.Multiply(realXInComplexNumber);
+                    coefficient = coefficient.Multiply(complexNumberWithRealX);
                 }
 
-                startingComplexNumber = startingComplexNumber.Add(coefficient);
+                startingComplexNumbers = startingComplexNumbers.Add(coefficient);
             }
 
-            return startingComplexNumber;
+            return startingComplexNumbers;
         }
 
         public override string ToString()
