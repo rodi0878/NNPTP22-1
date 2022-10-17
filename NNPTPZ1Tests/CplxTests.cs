@@ -83,6 +83,7 @@ namespace NNPTPZ1.Mathematics.Tests
             var e2 = "(1 + 0i) + (0 + 0i)x + (1 + 0i)xx";
             Assert.AreEqual(e2, r2);
         }
+
         [TestMethod()]
         public void MultiplyTest()
         {

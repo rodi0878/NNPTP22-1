@@ -8,6 +8,11 @@ namespace NNPTPZ1
         public double RealPart { get; set; }
         public double ImaginaryPart { get; set; }
 
+        public readonly static ComplexNumber Zero = new ComplexNumber()
+        {
+            RealPart = 0,
+            ImaginaryPart = 0
+        };
         public override bool Equals(object obj)
         {
             if (obj is ComplexNumber)
@@ -18,12 +23,6 @@ namespace NNPTPZ1
             return false;
         }
 
-        public readonly static ComplexNumber Zero = new ComplexNumber()
-        {
-            RealPart = 0,
-            ImaginaryPart = 0
-        };
-
         public ComplexNumber Multiply(ComplexNumber argumentComplexNumber)
         {
             ComplexNumber baseComplexNumber = this;
@@ -33,7 +32,7 @@ namespace NNPTPZ1
                 ImaginaryPart = baseComplexNumber.RealPart * argumentComplexNumber.ImaginaryPart + baseComplexNumber.ImaginaryPart * argumentComplexNumber.RealPart
             };
         }
-        public double GetAbS()
+        public double GetAbsoluteValue()
         {
             return Math.Sqrt(RealPart * RealPart + ImaginaryPart * ImaginaryPart);
         }
@@ -47,7 +46,7 @@ namespace NNPTPZ1
                 ImaginaryPart = baseComplexNumber.ImaginaryPart + argumentComplexNumber.ImaginaryPart
             };
         }
-        public double GetAngleInDegrees()
+        public double GetAngleInRadians()
         {
             return Math.Atan(ImaginaryPart / RealPart);
         }
