@@ -62,26 +62,30 @@ namespace NNPTPZ1
                         ImaginaryPart = y
                     };
 
-                    if (number.RealPart == 0)
-                        number.RealPart = 0.0001;
-                    if (number.ImaginaryPart == 0)
-                        number.ImaginaryPart = 0.0001f;
+                    if (number.RealPart == 0) number.RealPart = 0.0001;
+                    if (number.ImaginaryPart == 0) number.ImaginaryPart = 0.0001f;
 
-                    int iteration = 0;
-                    for (int k = 0; k < 30; k++)
-                    {
-                        var diff = polynomial.Evaluate(number).Divide(derivedPolynomial.Evaluate(number));
-                        number = number.Subtract(diff);
-
-                        if (Math.Pow(diff.RealPart, 2) + Math.Pow(diff.ImaginaryPart, 2) >= 0.5)
-                            k--;
-
-                        iteration++;
-                    }
-
+                    GetIteration(out int iteration, number);         
                     int rootNumber = GetRootNumber(number);
                     bitmap.SetPixel(j, i, GetPixelColor(rootNumber, iteration));
                 }
+        }
+
+        private int GetIteration(out int iteration, ComplexNumber number)
+        {
+            iteration = 0;
+            for (int i = 0; i < 30; i++)
+            {
+                var diff = polynomial.Evaluate(number).Divide(derivedPolynomial.Evaluate(number));
+                number = number.Subtract(diff);
+
+                if (Math.Pow(diff.RealPart, 2) + Math.Pow(diff.ImaginaryPart, 2) >= 0.5)
+                    i--;
+
+                iteration++;
+            }
+
+            return iteration;
         }
 
         private int GetRootNumber(ComplexNumber number)
