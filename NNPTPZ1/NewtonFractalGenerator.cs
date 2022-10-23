@@ -31,18 +31,17 @@ namespace NNPTPZ1.Generators
             )
         );
 
-
         private readonly string OutputFile;
         private readonly Color[] COLOURS = new Color[] {
             Color.Red, Color.Blue, Color.Green, Color.Yellow, Color.Orange, Color.Fuchsia, Color.Gold, Color.Cyan, Color.Magenta
         };
 
-        public NewtonFractalGenerator(int width, int height, double xMin, double xMax, double yMin, double yMax) : this(width, height, xMin, xMax, yMin, yMax, "../../../out.png")
+        private NewtonFractalGenerator(int width, int height, double xMin, double xMax, double yMin, double yMax) : this(width, height, xMin, xMax, yMin, yMax, "../../../out.png")
         {
 
         }
 
-        public NewtonFractalGenerator(int width, int height, double xMin, double xMax, double yMin, double yMax, string outputFile)
+        private NewtonFractalGenerator(int width, int height, double xMin, double xMax, double yMin, double yMax, string outputFile)
         {
             Width = width;
             Height = height;
@@ -54,7 +53,7 @@ namespace NNPTPZ1.Generators
             bitmap = new Bitmap(Width, Height);
         }
 
-        public NewtonFractalGenerator(string[] arguments)
+        private NewtonFractalGenerator(string[] arguments)
         {
             CheckArguments(arguments);
             Width = int.Parse(arguments[0]);
@@ -67,13 +66,14 @@ namespace NNPTPZ1.Generators
             bitmap = new Bitmap(Width, Height);
         }
 
-        public void Generate()
+        public static void Generate(string[] arguments)
         {
-            Console.WriteLine(polygon);
-            Console.WriteLine(polygon.Derive());
+            NewtonFractalGenerator generator = new NewtonFractalGenerator(arguments);
+            Console.WriteLine(generator.polygon);
+            Console.WriteLine(generator.polygon.Derive());
 
-            Cycle();
-            ToBitmap();
+            generator.Cycle();
+            generator.ToBitmap();
         }
 
         private void ToBitmap()
