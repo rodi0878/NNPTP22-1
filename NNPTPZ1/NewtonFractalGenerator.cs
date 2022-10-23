@@ -135,7 +135,6 @@ namespace NNPTPZ1.Generators
                     id = k;
                 }
             }
-
             if (!known)
             {
                 koreny.Add(complex);

@@ -26,7 +26,6 @@ namespace NNPTPZ1.Mathematics
         public ComplexNumber Multiply(ComplexNumber b)
         {
             ComplexNumber a = this;
-            // aRe*bRe + aRe*bIm*i + aIm*bRe*i + aIm*bIm*i*i
             return new ComplexNumber()
             {
                 RealPart = a.RealPart * b.RealPart - a.ImaginaryPart * b.ImaginaryPart,
@@ -70,9 +69,6 @@ namespace NNPTPZ1.Mathematics
 
         internal ComplexNumber Divide(ComplexNumber b)
         {
-            // (aRe + aIm*i) / (bRe + bIm*i)
-            // ((aRe + aIm*i) * (bRe - bIm*i)) / ((bRe + bIm*i) * (bRe - bIm*i))
-            //  bRe*bRe - bIm*bIm*i*i
             var dividend = this.Multiply(new ComplexNumber() { RealPart = b.RealPart, ImaginaryPart = -b.ImaginaryPart });
             var divisor = b.RealPart * b.RealPart + b.ImaginaryPart * b.ImaginaryPart;
 

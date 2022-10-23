@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text;
 
 namespace NNPTPZ1.Mathematics
 {
@@ -6,84 +7,82 @@ namespace NNPTPZ1.Mathematics
     {
         public List<ComplexNumber> Coefficient { get; set; }
 
-        public Polygon() => Coefficient = new List<ComplexNumber>();
+        public Polygon()
+        {
+            Coefficient = new List<ComplexNumber>();
+        }
 
-        public void Add(ComplexNumber coe) =>
-            Coefficient.Add(coe);
+        public Polygon(List<ComplexNumber> Coefficients) { 
+            Coefficient = Coefficients; 
+        }
 
-        /// <summary>
-        /// Derives this polynomial and creates new one
-        /// </summary>
-        /// <returns>Derivated polynomial</returns>
+        public void Add(ComplexNumber coefficient)
+        {
+            Coefficient.Add(coefficient);
+        }
+
         public Polygon Derive()
         {
-            Polygon p = new Polygon();
-            for (int q = 1; q < Coefficient.Count; q++)
+            Polygon polygon = new Polygon();
+            for (int i = 1; i < Coefficient.Count; i++)
             {
-                p.Coefficient.Add(Coefficient[q].Multiply(new ComplexNumber() { RealPart = q }));
+                polygon.Coefficient.Add(
+                    Coefficient[i].Multiply(new ComplexNumber() { RealPart = i })
+                );
             }
 
-            return p;
+            return polygon;
         }
 
-        /// <summary>
-        /// Evaluates polynomial at given point
-        /// </summary>
-        /// <param name="x">point of evaluation</param>
-        /// <returns>y</returns>
-        public ComplexNumber Evaluate(double x)
+        public ComplexNumber Evaluate(double realPart)
         {
-            var y = Evaluate(new ComplexNumber() { RealPart = x, ImaginaryPart = 0 });
-            return y;
+            ComplexNumber evaluator = new ComplexNumber() {
+                RealPart = realPart, 
+                ImaginaryPart = 0 
+            
+            };
+
+            return Evaluate(evaluator);
         }
 
-        /// <summary>
-        /// Evaluates polynomial at given point
-        /// </summary>
-        /// <param name="x">point of evaluation</param>
-        /// <returns>y</returns>
-        public ComplexNumber Evaluate(ComplexNumber x)
+        public ComplexNumber Evaluate(ComplexNumber evaluated)
         {
-            ComplexNumber s = ComplexNumber.Zero;
+            ComplexNumber evaluationResult = ComplexNumber.Zero;
             for (int i = 0; i < Coefficient.Count; i++)
             {
-                ComplexNumber coef = Coefficient[i];
-                ComplexNumber bx = x;
-                int power = i;
+                ComplexNumber coefficient = Coefficient[i];
+                ComplexNumber multiplied = evaluated;
 
                 if (i > 0)
                 {
-                    for (int j = 0; j < power - 1; j++)
-                        bx = bx.Multiply(x);
+                    for (int j = 0; j < i - 1; j++)
+                        multiplied = multiplied.Multiply(evaluated);
 
-                    coef = coef.Multiply(bx);
+                    coefficient = coefficient.Multiply(multiplied);
                 }
 
-                s = s.Add(coef);
+                evaluationResult = evaluationResult.Add(coefficient);
             }
 
-            return s;
+            return evaluationResult;
         }
 
         public override string ToString()
         {
-            string s = "";
-            int i = 0;
-            for (; i < Coefficient.Count; i++)
+            StringBuilder output = new StringBuilder();
+
+            for (int i = 0; i < Coefficient.Count; i++)
             {
-                s += Coefficient[i];
-                if (i > 0)
-                {
-                    int j = 0;
-                    for (; j < i; j++)
-                    {
-                        s += "x";
-                    }
-                }
-                if (i+1<Coefficient.Count)
-                s += " + ";
+                output.Append(Coefficient[i]);
+
+                for (int j = 0; j < i; j++)
+                    output.Append("x");
+                
+                if (i + 1 < Coefficient.Count)
+                    output.Append(" + ");
             }
-            return s;
+
+            return output.ToString();
         }
     }
 }
