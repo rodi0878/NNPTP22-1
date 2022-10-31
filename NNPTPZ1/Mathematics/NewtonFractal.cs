@@ -5,7 +5,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Threading.Tasks;
 
-namespace NNPTPZ1 {
+namespace Mathematics {
 
     public class NewtonFractal {
 

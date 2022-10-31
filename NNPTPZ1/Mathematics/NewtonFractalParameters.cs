@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NNPTPZ1 {
+namespace Mathematics {
 
     public class NewtonFractalParameters {
 

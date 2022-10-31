@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using Mathematics;
-using System.Diagnostics;
-using System.Security.Cryptography;
 using System.IO;
-using System.Net.Http.Headers;
 
 namespace NNPTPZ1 {
     /// <summary>
