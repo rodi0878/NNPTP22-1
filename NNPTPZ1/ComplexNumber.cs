@@ -48,7 +48,7 @@ namespace NNPTPZ1.Mathematics
             };
         }
 
-        public double GetAngleInDegrees()
+        public double GetAngleInRadians()
         {
             return Math.Atan(ImaginaryPart / RealPart);
         }
