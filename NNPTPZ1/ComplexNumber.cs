@@ -7,6 +7,12 @@ namespace NNPTPZ1.Mathematics
         public double RealPart { get; set; }
         public double ImaginaryPart { get; set; }
 
+        public readonly static ComplexNumber Zero = new ComplexNumber()
+        {
+            RealPart = 0,
+            ImaginaryPart = 0
+        };
+
         public override bool Equals(object obj)
         {
             if (obj is ComplexNumber)
@@ -16,12 +22,6 @@ namespace NNPTPZ1.Mathematics
             }
             return base.Equals(obj);
         }
-
-        public readonly static ComplexNumber Zero = new ComplexNumber()
-        {
-            RealPart = 0,
-            ImaginaryPart = 0
-        };
 
         public ComplexNumber Multiply(ComplexNumber b)
         {
