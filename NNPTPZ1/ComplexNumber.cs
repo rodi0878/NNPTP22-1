@@ -5,7 +5,7 @@ namespace NNPTPZ1.Mathematics
     public class ComplexNumber
     {
         public double RealPart { get; set; }
-        public float ImaginaryPart { get; set; }
+        public double ImaginaryPart { get; set; }
 
         public override bool Equals(object obj)
         {
