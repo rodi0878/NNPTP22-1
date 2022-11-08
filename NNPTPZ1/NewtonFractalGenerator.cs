@@ -172,8 +172,6 @@ namespace NNPTPZ1.Generators
             CheckDoubleParsable(arguments[3], "Argument on position 4 is not a valid number");
             CheckDoubleParsable(arguments[4], "Argument on position 5 is not a valid number");
             CheckDoubleParsable(arguments[5], "Argument on position 6 is not a valid number");
-
-            using (FileStream test = File.OpenWrite(arguments[6] ?? "../../../out.png")) { }
         }
 
         private void CheckIntParsable(string input, string errorMessage)
