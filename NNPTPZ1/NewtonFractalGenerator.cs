@@ -1,5 +1,6 @@
 ﻿using NNPTPZ1.Mathematics;
 using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -90,22 +91,24 @@ namespace NNPTPZ1.Generators
             {
                 for (int j = 0; j < Height; j++)
                 {
-                    double x = XMin + i * xStep;
-                    double y = YMin + j * yStep;
-
+                    double x = XMin + j * xStep;
+                    double y = YMin + i * yStep;
                     ComplexNumber ox = new ComplexNumber()
                     {
                         RealPart = (x == 0 ? 0.001 : x),
                         ImaginaryPart = (y == 0 ? 0.001f : (float)y)
                     };
-                    Colorize(i, j, FindRoots(ox), Iterate(ox));
+
+                    ox = Iterate(ox, out int iterations);
+
+                    Colorize(i, j, FindRoots(ox), iterations);
                 }
             }
         }
 
-        private int Iterate(ComplexNumber ox)
+        private ComplexNumber Iterate(ComplexNumber ox, out int iteration)
         {
-            int iteration = 0;
+            iteration = 0;
             for (int k = 0; k < 30; k++)
             {
                 ComplexNumber difference = polygon.Evaluate(ox).Divide(polygon.Derive().Evaluate(ox));
@@ -118,7 +121,7 @@ namespace NNPTPZ1.Generators
                 iteration++;
             }
 
-            return iteration;
+            return ox;
         }
 
         private int FindRoots(ComplexNumber complex)
