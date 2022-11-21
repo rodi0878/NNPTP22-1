@@ -67,7 +67,7 @@ namespace NNPTPZ1
              );
         }
 
-        private int FindRoot(ComplexNumber pixel)
+        private int FindRootNumber(ComplexNumber pixel)
         {
             bool known = false;
             int id = 0;
@@ -125,7 +125,7 @@ namespace NNPTPZ1
         private Color GetColor(ComplexNumber pixel)
         {
             int iteration = FindNewtonIteration(pixel);
-            int rootIndex = FindRoot(pixel);
+            int rootIndex = FindRootNumber(pixel);
 
             Color color = Colors[rootIndex % Colors.Length];
             color = Color.FromArgb(
