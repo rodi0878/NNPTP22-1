@@ -82,8 +82,7 @@ namespace Mathematics
         public override string ToString()
         {
             string result = "";
-            int i = 0;
-            for (; i < Coefficients.Count; i++)
+            for (int i = 0; i < Coefficients.Count; i++)
             {
                 result += Coefficients[i];
                 if (i > 0)
