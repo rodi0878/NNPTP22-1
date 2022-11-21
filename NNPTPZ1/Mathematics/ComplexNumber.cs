@@ -16,7 +16,7 @@ namespace Mathematics
         {
             return Math.Sqrt(RealPart * RealPart + ImaginaryPart * ImaginaryPart);
         }
-        public double GetAngleInDegrees()
+        public double GetAngleInRadians()
         {
             return Math.Atan(ImaginaryPart / RealPart);
         }
@@ -48,6 +48,19 @@ namespace Mathematics
                 ImaginaryPart = a.ImaginaryPart - b.ImaginaryPart
             };
         }
+
+        internal ComplexNumber Divide(ComplexNumber b)
+        {
+            ComplexNumber numerator = this.Multiply(new ComplexNumber() { RealPart = b.RealPart, ImaginaryPart = -b.ImaginaryPart }); // a * conjugate b
+            double denominator = b.RealPart * b.RealPart + b.ImaginaryPart * b.ImaginaryPart;
+
+            return new ComplexNumber()
+            {
+                RealPart = numerator.RealPart / denominator,
+                ImaginaryPart = numerator.ImaginaryPart / denominator
+            };
+        }
+
         public override bool Equals(object objectToCompare)
         {
             if (objectToCompare is ComplexNumber)
@@ -61,17 +74,6 @@ namespace Mathematics
         public override string ToString()
         {
             return $"({RealPart} + {ImaginaryPart}i)";
-        }
-        internal ComplexNumber Divide(ComplexNumber b)
-        {
-            ComplexNumber numerator = this.Multiply(new ComplexNumber() { RealPart = b.RealPart, ImaginaryPart = -b.ImaginaryPart }); // a * conjugate b
-            double denominator = b.RealPart * b.RealPart + b.ImaginaryPart * b.ImaginaryPart;
-
-            return new ComplexNumber()
-            {
-                RealPart = numerator.RealPart / denominator,
-                ImaginaryPart = numerator.ImaginaryPart / denominator
-            };
         }
     }
 }
