@@ -92,7 +92,7 @@ namespace NNPTPZ1
         {
             for (int iIteration = 0; iIteration < MaximumIterations; iIteration++)
             {
-                var difference = polynomial.Eval(complexNumber).Divide(polynomialDerived.Eval(complexNumber));
+                var difference = polynomial.Evaluate(complexNumber).Divide(polynomialDerived.Evaluate(complexNumber));
                 complexNumber = complexNumber.Subtract(difference);
 
 

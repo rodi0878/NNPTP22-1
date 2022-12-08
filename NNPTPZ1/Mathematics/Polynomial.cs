@@ -23,13 +23,13 @@ namespace NNPTPZ1.Mathematics
         /// <returns>Derivated polynomial</returns>
         public Polynomial Derive()
         {
-            Polynomial p = new Polynomial();
-            for (int q = 1; q < Coefficients.Count; q++)
+            Polynomial polynomial = new Polynomial();
+            for (int i = 1; i < Coefficients.Count; i++)
             {
-                p.Coefficients.Add(Coefficients[q].Multiply(new ComplexNumber() { Real = q }));
+                polynomial.Coefficients.Add(Coefficients[i].Multiply(new ComplexNumber() { Real = i }));
             }
 
-            return p;
+            return polynomial;
         }
 
         /// <summary>
@@ -37,9 +37,9 @@ namespace NNPTPZ1.Mathematics
         /// </summary>
         /// <param name="x">point of evaluation</param>
         /// <returns>y</returns>
-        public ComplexNumber Eval(double x)
+        public ComplexNumber Evaluate(double x)
         {
-            var y = Eval(new ComplexNumber() { Real = x, Imaginary = 0 });
+            var y = Evaluate(new ComplexNumber() { Real = x, Imaginary = 0 });
             return y;
         }
 
@@ -48,12 +48,12 @@ namespace NNPTPZ1.Mathematics
         /// </summary>
         /// <param name="x">point of evaluation</param>
         /// <returns>y</returns>
-        public ComplexNumber Eval(ComplexNumber x)
+        public ComplexNumber Evaluate(ComplexNumber x)
         {
-            ComplexNumber s = ComplexNumber.Zero;
+            ComplexNumber complex = ComplexNumber.Zero;
             for (int i = 0; i < Coefficients.Count; i++)
             {
-                ComplexNumber coef = Coefficients[i];
+                ComplexNumber coefficient = Coefficients[i];
                 ComplexNumber bx = x;
                 int power = i;
 
@@ -62,13 +62,13 @@ namespace NNPTPZ1.Mathematics
                     for (int j = 0; j < power - 1; j++)
                         bx = bx.Multiply(x);
 
-                    coef = coef.Multiply(bx);
+                    coefficient = coefficient.Multiply(bx);
                 }
 
-                s = s.Add(coef);
+                complex = complex.Add(coefficient);
             }
 
-            return s;
+            return complex;
         }
 
         /// <summary>
@@ -77,23 +77,22 @@ namespace NNPTPZ1.Mathematics
         /// <returns>String repr of polynomial</returns>
         public override string ToString()
         {
-            string s = "";
-            int i = 0;
-            for (; i < Coefficients.Count; i++)
+            string output = string.Empty;
+
+            for (int i = 0; i < Coefficients.Count; i++)
             {
-                s += Coefficients[i];
+                output += Coefficients[i];
                 if (i > 0)
                 {
-                    int j = 0;
-                    for (; j < i; j++)
+                    for (int j = 0; j < i; j++)
                     {
-                        s += "x";
+                        output += "x";
                     }
                 }
                 if (i + 1 < Coefficients.Count)
-                    s += " + ";
+                    output += " + ";
             }
-            return s;
+            return output;
         }
     }
 }

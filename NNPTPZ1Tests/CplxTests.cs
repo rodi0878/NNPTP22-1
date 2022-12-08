@@ -69,13 +69,13 @@ namespace NNPTPZ1.Mathematics.Tests
             poly.Coefficients.Add(new ComplexNumber() { Real = 1, Imaginary = 0 });
             poly.Coefficients.Add(new ComplexNumber() { Real = 0, Imaginary = 0 });
             poly.Coefficients.Add(new ComplexNumber() { Real = 1, Imaginary = 0 });
-            ComplexNumber result = poly.Eval(new ComplexNumber() { Real = 0, Imaginary = 0 });
+            ComplexNumber result = poly.Evaluate(new ComplexNumber() { Real = 0, Imaginary = 0 });
             var expected = new ComplexNumber() { Real = 1, Imaginary = 0 };
             Assert.AreEqual(expected, result);
-            result = poly.Eval(new ComplexNumber() { Real = 1, Imaginary = 0 });
+            result = poly.Evaluate(new ComplexNumber() { Real = 1, Imaginary = 0 });
             expected = new ComplexNumber() { Real = 2, Imaginary = 0 };
             Assert.AreEqual(expected, result);
-            result = poly.Eval(new ComplexNumber() { Real = 2, Imaginary = 0 });
+            result = poly.Evaluate(new ComplexNumber() { Real = 2, Imaginary = 0 });
             expected = new ComplexNumber() { Real = 5.0000000000, Imaginary = 0 };
             Assert.AreEqual(expected, result);
 
