@@ -45,7 +45,7 @@ namespace Mathematics
             return new ComplexNumber()
             {
                 RealValue = this.RealValue * b.RealValue - this.ImaginaryValue * b.ImaginaryValue,
-                ImaginaryValue = (float)(this.RealValue * b.ImaginaryValue + this.ImaginaryValue * b.RealValue)
+                ImaginaryValue = this.RealValue * b.ImaginaryValue + this.ImaginaryValue * b.RealValue
             };
         }
 
@@ -57,7 +57,7 @@ namespace Mathematics
             return new ComplexNumber()
             {
                 RealValue = temporary.RealValue / temporary2,
-                ImaginaryValue = (float)(temporary.ImaginaryValue / temporary2)
+                ImaginaryValue = temporary.ImaginaryValue / temporary2
             };
         }
 
@@ -66,7 +66,7 @@ namespace Mathematics
             return Math.Sqrt(RealValue * RealValue + ImaginaryValue * ImaginaryValue);
         }
 
-        public double GetAngleInDegrees()
+        public double GetAngleInRadians()
         {
             return Math.Atan(ImaginaryValue / RealValue);
         }
