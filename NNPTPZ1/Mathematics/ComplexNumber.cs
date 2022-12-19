@@ -5,7 +5,7 @@ namespace Mathematics
     public class ComplexNumber
     {
         public double RealValue { get; set; }
-        public float ImaginaryValue { get; set; }
+        public double ImaginaryValue { get; set; }
         public readonly static ComplexNumber SetPropertiesZero = new ComplexNumber()
         {
             RealValue = 0,

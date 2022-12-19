@@ -8,19 +8,19 @@ namespace NNPTPZ1
     class Fractal
     {
         private static readonly string DefaultFolderPath = "../../../out.png";
-        private Bitmap bitmap { get; set; }
-        private Polynomial polynomial { get; set; }
-        private Polynomial polynomDerivation { get; set; }
-        private ComplexNumber complexNumber { get; set; }
-        private List<ComplexNumber> roots { get; set; }
-        private Dictionary<string, double> parameters { get; set; }
-        private string output { get; set; }
-        private Color[] colors { get; set; }
+        private Bitmap _bitmap;
+        private Polynomial _polynomial;
+        private Polynomial _polynomDerivation;
+        private ComplexNumber _complexNumber;
+        private List<ComplexNumber> _roots;
+        private Dictionary<string, double> _parameters;
+        private string _output;
+        private Color[] _colors;
 
         public Fractal(string[] arguments)
         {
-            roots = new List<ComplexNumber>();
-            colors = new Color[]
+            _roots = new List<ComplexNumber>();
+            _colors = new Color[]
             {
                 Color.Red, Color.Blue, Color.Green, Color.Yellow, Color.Orange, Color.Fuchsia, Color.Gold, Color.Cyan, Color.Magenta
             };
@@ -32,35 +32,35 @@ namespace NNPTPZ1
 
         public void CreatePolynomials()
         {
-            polynomial = new Polynomial();
+            _polynomial = new Polynomial();
 
-            polynomial.ListOfComplexNumbers.Add(new ComplexNumber() { RealValue = 1 });
-            polynomial.ListOfComplexNumbers.Add(ComplexNumber.SetPropertiesZero);
-            polynomial.ListOfComplexNumbers.Add(ComplexNumber.SetPropertiesZero);
-            polynomial.ListOfComplexNumbers.Add(new ComplexNumber() { RealValue = 1 });
+            _polynomial.ListOfComplexNumbers.Add(new ComplexNumber() { RealValue = 1 });
+            _polynomial.ListOfComplexNumbers.Add(ComplexNumber.SetPropertiesZero);
+            _polynomial.ListOfComplexNumbers.Add(ComplexNumber.SetPropertiesZero);
+            _polynomial.ListOfComplexNumbers.Add(new ComplexNumber() { RealValue = 1 });
             
-            polynomDerivation = polynomial.Derive();
+            _polynomDerivation = _polynomial.Derive();
         }
 
         public void CreateBitmap()
         {
-            for (int i = 0; i < bitmap.Width; i++)
+            for (int i = 0; i < _bitmap.Width; i++)
             {
-                for (int j = 0; j < bitmap.Height; j++)
+                for (int j = 0; j < _bitmap.Height; j++)
                 {
                     FindWorldCoordinatesOfPixel(i, j);     
-                    float iteration = FindSolutionOfEquation();
+                    int iteration = FindSolutionOfEquation();
                     int id = FindSolutionOfRootNumber();
                     ColorizePixelAccordingToRootNumber(iteration, id, i, j);
                 }
             }
-            bitmap.Save(output);
+            _bitmap.Save(_output);
         }
 
         public void AddParameters(string[] arguments)
         {
-            parameters = new Dictionary<string, double>();
-            bitmap = new Bitmap(int.Parse(arguments[0]), int.Parse(arguments[1]));
+            _parameters = new Dictionary<string, double>();
+            _bitmap = new Bitmap(int.Parse(arguments[0]), int.Parse(arguments[1]));
 
             double xmin = double.Parse(arguments[2]);
             double xmax = double.Parse(arguments[3]);
@@ -70,22 +70,22 @@ namespace NNPTPZ1
             double xstep = (xmax - xmin) / int.Parse(arguments[0]);
             double ystep = (ymax - ymin) / int.Parse(arguments[1]);
 
-            parameters.Add("xmin", xmin);
-            parameters.Add("ymin", ymin);
-            parameters.Add("xstep", xstep);
-            parameters.Add("ystep", ystep);
+            _parameters.Add("xmin", xmin);
+            _parameters.Add("ymin", ymin);
+            _parameters.Add("xstep", xstep);
+            _parameters.Add("ystep", ystep);
 
-            output = (arguments.Length == 6 || arguments[6] == null) ? DefaultFolderPath : arguments[6];
+            _output = (arguments.Length == 6 || arguments[6] == null) ? DefaultFolderPath : arguments[6];
         }
 
         // find solution of equation using newton's iteration
-        public float FindSolutionOfEquation()
+        public int FindSolutionOfEquation()
         {
-            float iteration = 0;
+            int iteration = 0;
             for (int i = 0; i < 30; i++)
             {
-                var difference = polynomial.Evaluate(complexNumber).Divide(polynomDerivation.Evaluate(complexNumber));
-                complexNumber = complexNumber.Subtract(difference);
+                ComplexNumber difference = _polynomial.Evaluate(_complexNumber).Divide(_polynomDerivation.Evaluate(_complexNumber));
+                _complexNumber = _complexNumber.Subtract(difference);
 
                 if (Math.Pow(difference.RealValue, 2) + Math.Pow(difference.ImaginaryValue, 2) >= 0.5)
                 {
@@ -100,48 +100,49 @@ namespace NNPTPZ1
         public int FindSolutionOfRootNumber()
         {
             var known = false;
-            var id = 0;
-            for (int i = 0; i < roots.Count; i++)
+            var index = 0;
+            for (int i = 0; i < _roots.Count; i++)
             {
-                if (Math.Pow(complexNumber.RealValue - roots[i].RealValue, 2) + Math.Pow(complexNumber.ImaginaryValue - roots[i].ImaginaryValue, 2) <= 0.01)
+                if (Math.Pow(_complexNumber.RealValue - _roots[i].RealValue, 2) + Math.Pow(_complexNumber.ImaginaryValue - _roots[i].ImaginaryValue, 2) <= 0.01)
                 {
                     known = true;
-                    id = i;
+                    index = i;
                 }
             }
             if (!known)
             {
-                roots.Add(complexNumber);
-                id = roots.Count;
+                _roots.Add(_complexNumber);
+                index = _roots.Count;
             }
-            return id;
+            return index;
         }
 
         // colorize pixel according to root number
-        public void ColorizePixelAccordingToRootNumber(float iteration, int id, int i, int j)
+        public void ColorizePixelAccordingToRootNumber(int iteration, int id, int i, int j)
         {
-            Color color = colors[id % colors.Length];
-            color = Color.FromArgb(color.R, color.G, color.B);
-            color = Color.FromArgb(Math.Min(Math.Max(0, color.R - (int)iteration * 2), 255), Math.Min(Math.Max(0, color.G - (int)iteration * 2), 255), Math.Min(Math.Max(0, color.B - (int)iteration * 2), 255));
-            bitmap.SetPixel(j, i, color);
+            Color color = _colors[id % _colors.Length];
+            color = Color.FromArgb(Math.Min(Math.Max(0, color.R - iteration * 2), 255),
+                Math.Min(Math.Max(0, color.G - iteration * 2), 255),
+                Math.Min(Math.Max(0, color.B - iteration * 2), 255));
+            _bitmap.SetPixel(j, i, color);
         }
 
         // find "world" coordinates of pixel
         public void FindWorldCoordinatesOfPixel(int i, int j)
         {
-            double y = parameters["ymin"] + i * parameters["ystep"];
-            double x = parameters["xmin"] + j * parameters["xstep"];
+            double y = _parameters["ymin"] + i * _parameters["ystep"];
+            double x = _parameters["xmin"] + j * _parameters["xstep"];
 
-            complexNumber = new ComplexNumber()
+            _complexNumber = new ComplexNumber()
             {
                 RealValue = x,
-                ImaginaryValue = (float)(y)
+                ImaginaryValue = y
             };
 
-            if (complexNumber.RealValue == 0)
-                complexNumber.RealValue = 0.0001;
-            if (complexNumber.ImaginaryValue == 0)
-                complexNumber.ImaginaryValue = 0.0001f;
+            if (_complexNumber.RealValue == 0)
+                _complexNumber.RealValue = 0.0001;
+            if (_complexNumber.ImaginaryValue == 0)
+                _complexNumber.ImaginaryValue = 0.0001f;
         }
     
     }
